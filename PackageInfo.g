@@ -26,18 +26,10 @@ end;
 
 SetPackageInfo( rec(
 
-##  This is case sensitive, use your preferred spelling.
 PackageName := "recog",
-
-##  This may be used by a default banner or on a Web page, should fit on
-##  one line.
 Subtitle := "A collection of group recognition methods",
-Version := "1.2",
-##  Please adjust also the VERSION file in the package directory when
-##  changing this.
-
-##  Release date of the current version in dd/mm/yyyy format.
-Date := "28/05/2011",
+Version := "1.2.1",
+Date := "31/04/2014", # dd/mm/yyyy format
 
 ##  Information about authors and maintainers.
 Persons := [
@@ -45,7 +37,7 @@ Persons := [
     LastName      := "Neunhoeffer",
     FirstNames    := "Max",
     IsAuthor      := true,
-    IsMaintainer  := true,
+    IsMaintainer  := false,
     Email         := "neunhoef@mcs.st-and.ac.uk",
     WWWHome       := "http://www-groups.mcs.st-and.ac.uk/~neunhoef",
     PostalAddress := Concatenation( [
@@ -220,14 +212,13 @@ Status := "deposited",
 # AcceptDate := "08/1999",
 #AcceptDate := "",
 
-BaseURL := "http://www-groups.mcs.st-and.ac.uk/~neunhoef/Computer/Software/Gap/",
-
-PackageWWWHome := Concatenation( ~.BaseURL, "recog.html" ),
-ArchiveURL     := Concatenation( ~.BaseURL, "recog/recog-", ~.Version ),
-README_URL     := Concatenation( ~.BaseURL, "recog/README.recog" ),
-PackageInfoURL := Concatenation( ~.BaseURL, "recog/PackageInfo.g" ),
-
-ArchiveFormats := ".tar.gz",
+PackageWWWHome := "http://neunhoef.github.io/recog/",
+README_URL     := Concatenation(~.PackageWWWHome, "README"),
+PackageInfoURL := Concatenation(~.PackageWWWHome, "PackageInfo.g"),
+ArchiveURL     := Concatenation("https://github.com/neunhoef/recog/",
+                                "releases/download/v", ~.Version,
+                                "/recog-", ~.Version),
+ArchiveFormats := ".tar.gz .tar.bz2",
 
 ##  Here you  must provide a short abstract explaining the package content 
 ##  in HTML format (used on the package overview Web page) and an URL 

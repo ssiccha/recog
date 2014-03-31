@@ -1,6 +1,6 @@
 name: recog
-version: 1.2
-date: 28/05/2011
+version: 1.2.1
+date: 31/04/2014
 description: A collection of group recognition methods
 
 authors:
@@ -28,10 +28,6 @@ authors:
     - name: Colva M. Roney-Dougal
       url: http://www-groups.mcs.st-and.ac.uk/~colva
 
-maintainers:
-    - name: Max Neunhoeffer
-      url: http://www-groups.mcs.st-and.ac.uk/~neunhoef
-
 GAP: ">=4.4.12"
 
 needed-pkgs:
@@ -50,13 +46,15 @@ needed-pkgs:
     - name: "recogbase"
       version: ">= 1.0"
 
-www: http://www-groups.mcs.st-and.ac.uk/~neunhoef/Computer/Software/Gap/recog.html
-readme: http://www-groups.mcs.st-and.ac.uk/~neunhoef/Computer/Software/Gap/recog/README.recog
-packageinfo: http://www-groups.mcs.st-and.ac.uk/~neunhoef/Computer/Software/Gap/recog/PackageInfo.g
+www: http://neunhoef.github.io/recog/
+readme: http://neunhoef.github.io/recog/README
+packageinfo: http://neunhoef.github.io/recog/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: http://www-groups.mcs.st-and.ac.uk/~neunhoef/Computer/Software/Gap/recog/recog-1.2.tar.gz
+      url: https://github.com/neunhoef/recog/releases/download/v1.2.1/recog-1.2.1.tar.gz
+    - name: .tar.bz2
+      url: https://github.com/neunhoef/recog/releases/download/v1.2.1/recog-1.2.1.tar.bz2
 
 abstract: <b>Warning:</b> This package is still under development and    this version is to be considered a working, but preliminary one. <p/>    This packages contains a collection of methods for the    constructive recognition of groups. It is mostly intended for    permutation groups, matrix groups and projective groups.
 

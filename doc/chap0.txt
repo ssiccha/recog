@@ -6,10 +6,10 @@
                            [1XGroup Recognition Methods[101X
   
   
-                                      1.2
+                                     1.2.1
   
   
-                                    May 2012
+                                   March 2014
   
   
                                  Max Neunhöffer
@@ -67,6 +67,7 @@
   1 [33X[0;0YIntroduction[133X
     1.1 [33X[0;0YPhilosophy[133X
     1.2 [33X[0;0YOverview over this manual[133X
+    1.3 [33X[0;0YFeedback[133X
   2 [33X[0;0YInstallation of the [5Xrecog[105X-Package[133X
   3 [33X[0;0YMethods for recognition[133X
     3.1 [33X[0;0YMethods for permutation groups[133X
