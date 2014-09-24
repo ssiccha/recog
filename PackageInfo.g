@@ -1,13 +1,7 @@
 #############################################################################
 ##  
-##  PackageInfo.g for the package `recog'                     
-##                                                            Max Neunhoeffer
-##                                                                Akos Seress
-##                                                                     et al.
+##  PackageInfo.g for the package `recog'
 ##  
-
-##  With a new release of the package at least the entries .Version, .Date and
-##  .ArchiveURL must be updated.
 
 RecogsFunnyNameFormatterFunction := function(st)
   if Length(st) = 0 then 
@@ -28,42 +22,30 @@ SetPackageInfo( rec(
 
 PackageName := "recog",
 Subtitle := "A collection of group recognition methods",
-Version := "1.2.2",
-Date := "04/04/2014", # dd/mm/yyyy format
+Version := "1.2.3",
+Date := "24/09/2014", # dd/mm/yyyy format
 
 ##  Information about authors and maintainers.
 Persons := [
   rec( 
-    LastName      := "Neunhoeffer",
+    LastName      := "Neunhöffer",
     FirstNames    := "Max",
     IsAuthor      := true,
     IsMaintainer  := false,
-    Email         := "neunhoef@mcs.st-and.ac.uk",
+    Email         := "max@9hoeffer.de",
     WWWHome       := "http://www-groups.mcs.st-and.ac.uk/~neunhoef",
     PostalAddress := Concatenation( [
-                       "School of Mathematics and Statistics\n",
-                       "Mathematical Institute\n",
-                       "North Haugh\n",
-                       "St Andrews, Fife KY16 9SS\n",
-                       "Scotland, UK" ] ),
-    Place         := "St Andrews",
-    Institution   := "University of St Andrews"
+                       "Gustav-Freytag-Straße 40\n",
+                       "50354 Hürth\n",
+                       "Germany" ] ),
+    #Place         := "St Andrews",
+    #Institution   := "University of St Andrews"
   ),
   rec( 
     LastName      := "Seress",
-    FirstNames    := "Akos",
+    FirstNames    := "Ákos",
     IsAuthor      := true,
     IsMaintainer  := false,
-    Email         := "akos@math.ohio-state.edu",
-    WWWHome       := "http://www.math.ohio-state.edu/~akos/",
-    PostalAddress := Concatenation( [
-                       "Akos Seress\n",
-                       "714 Math Tower\n",
-                       "231 W 18th ave\n",
-                       "Columbus, OH  43210\n",
-                       "USA" ] ),
-    Place         := "Columbus",
-    Institution   := "Ohio-state University at Columbus"
   ),
   rec( 
     LastName      := "Ankaralioglu",
@@ -191,6 +173,23 @@ Persons := [
     Place         := "St Andrews",
     Institution   := "University of St Andrews"
   ),
+  rec(
+    LastName      := "Horn",
+    FirstNames    := "Max",
+    IsAuthor      := false,
+    IsMaintainer  := true,
+    Email         := "max.horn@math.uni-giessen.de",
+    WWWHome       := "http://www.quendi.de/math",
+    PostalAddress := Concatenation(
+                       "AG Algebra\n",
+                       "Mathematisches Institut\n",
+                       "Justus-Liebig-Universität Gießen\n",
+                       "Arndtstraße 2\n",
+                       "35392 Gießen\n",
+                       "Germany" ),
+    Place         := "Gießen",
+    Institution   := "Justus-Liebig-Universität Gießen"
+  ),
 ],
 
 ##  Status information. Currently the following cases are recognized:
@@ -212,10 +211,10 @@ Status := "deposited",
 # AcceptDate := "08/1999",
 #AcceptDate := "",
 
-PackageWWWHome := "http://neunhoef.github.io/recog/",
+PackageWWWHome := "http://gap-system.github.io/recog/",
 README_URL     := Concatenation(~.PackageWWWHome, "README"),
 PackageInfoURL := Concatenation(~.PackageWWWHome, "PackageInfo.g"),
-ArchiveURL     := Concatenation("https://github.com/neunhoef/recog/",
+ArchiveURL     := Concatenation("https://github.com/gap-system/recog/",
                                 "releases/download/v", ~.Version,
                                 "/recog-", ~.Version),
 ArchiveFormats := ".tar.gz .tar.bz2",
@@ -269,7 +268,7 @@ BannerString := Concatenation(
   "by ", ~.Persons[1].FirstNames, " ", ~.Persons[1].LastName,
         " (", ~.Persons[1].WWWHome, ") and\n",
   "   ", ~.Persons[2].FirstNames, " ", ~.Persons[2].LastName,
-        " (", ~.Persons[2].WWWHome, ")\n",
+        "\n",
   "with contributed code by:\n",
   Concatenation(Concatenation(List(~.Persons{[3..Length(~.Persons)-1]},
        p->["     ",p.FirstNames," ",p.LastName,
@@ -293,7 +292,18 @@ AvailabilityTest := ReturnTrue,
 
 ##  *Optional*: Here you can list some keyword related to the topic 
 ##  of the package.
-Keywords := ["matrix group recognition", "group recognition", "methods"]
+Keywords := ["matrix group recognition", "group recognition", "methods"],
+
+AutoDoc := rec(
+    TitlePage := rec(
+        Copyright := Concatenation(
+                    "&copyright; 2005-2014 by Max Neunhöffer and Ákos Seress<P/>\n",
+                    "\n",
+                    "This package may be distributed under the terms and conditions of the\n",
+                    "GNU Public License Version 3 or (at your option) any later version.\n"
+                ),
+    )
+),
 
 ));
 Unbind(RecogsFunnyNameFormatterFunction);
