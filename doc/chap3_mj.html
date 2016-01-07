@@ -52,19 +52,23 @@
 <div class="ContSSBlock">
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X796A682C78FFB9DC">3.2-1 <span class="Heading"><code class="code">TrivialMatrixGroup</code></span></a>
 </span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X79C0EC2987BCA334">3.2-2 <span class="Heading"><code class="code">DiagonalMatrices</code></span></a>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X86123FF278575E5D">3.2-2 <span class="Heading"><code class="code">KnownStabilizerChain</code></span></a>
 </span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X8499282F7825D28C">3.2-3 <span class="Heading"><code class="code">ReducibleIso</code></span></a>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X79C0EC2987BCA334">3.2-3 <span class="Heading"><code class="code">DiagonalMatrices</code></span></a>
 </span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X85655B8082FCB0AD">3.2-4 <span class="Heading"><code class="code">BlockLowerTriangular</code></span></a>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7829E7AF8753E697">3.2-4 <span class="Heading"><code class="code">FewGensAbelian</code></span></a>
 </span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X799EEBE27AF157B6">3.2-5 <span class="Heading"><code class="code">BlockDiagonal</code></span></a>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X8499282F7825D28C">3.2-5 <span class="Heading"><code class="code">ReducibleIso</code></span></a>
 </span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X79A0674B7ECAFB62">3.2-6 <span class="Heading"><code class="code">GoProjective</code></span></a>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X85655B8082FCB0AD">3.2-6 <span class="Heading"><code class="code">BlockLowerTriangular</code></span></a>
 </span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7B9301E97DE36543">3.2-7 <span class="Heading"><code class="code">BlockScalar</code></span></a>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X799EEBE27AF157B6">3.2-7 <span class="Heading"><code class="code">BlockDiagonal</code></span></a>
 </span>
-<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X78A525FD797F429B">3.2-8 <span class="Heading"><code class="code">LowerLeftPGroup</code></span></a>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X79A0674B7ECAFB62">3.2-8 <span class="Heading"><code class="code">GoProjective</code></span></a>
+</span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X7B9301E97DE36543">3.2-9 <span class="Heading"><code class="code">BlockScalar</code></span></a>
+</span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap3_mj.html#X78A525FD797F429B">3.2-10 <span class="Heading"><code class="code">LowerLeftPGroup</code></span></a>
 </span>
 </div></div>
 <div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap3_mj.html#X867550F684F795AE">3.3 <span class="Heading">Methods for projective groups</span></a>
@@ -108,7 +112,7 @@
 
 <h4>3.1 <span class="Heading">Methods for permutation groups</span></h4>
 
-<p>The following table gives an overview over the installed methods and their rank (higher rank means higher priority, the method is tried earlier, see Chapter <a href="/Users/mhorn/Projekte/GAP/repos/pkg/neunhoef/recogbase/doc/chap3_mj.html#X8058CC8187162644"><span class="RefLink">recogbase: Method Selection</span></a>).</p>
+<p>The following table gives an overview over the installed methods and their rank (higher rank means higher priority, the method is tried earlier, see Chapter <a href="/Users/mhorn/Projekte/GAP/repos/pkg/my-pkgs/recogbase/doc/chap3_mj.html#X8058CC8187162644"><span class="RefLink">recogbase: Method Selection</span></a>).</p>
 
 <div class="pcenter"><table class="GAPDocTable">
 <caption class="GAPDocTable"><b>Table: </b>Permutation group find homomorphism methods</caption>
@@ -220,7 +224,7 @@
 
 <p>THIS CHAPTER IS CURRENTLY A BIT OUT OF DATE!</p>
 
-<p>The following table gives an overview over the installed methods and their rank (higher rank means higher priority, the method is tried earlier, see Chapter <a href="/Users/mhorn/Projekte/GAP/repos/pkg/neunhoef/recogbase/doc/chap3_mj.html#X8058CC8187162644"><span class="RefLink">recogbase: Method Selection</span></a>). Note that there are not that many methods for matrix groups since the system can switch to projective groups by dividing out the subgroup of scalar matrices. The bulk of the recognition methods are then installed es methods for projective groups.</p>
+<p>The following table gives an overview over the installed methods and their rank (higher rank means higher priority, the method is tried earlier, see Chapter <a href="/Users/mhorn/Projekte/GAP/repos/pkg/my-pkgs/recogbase/doc/chap3_mj.html#X8058CC8187162644"><span class="RefLink">recogbase: Method Selection</span></a>). Note that there are not that many methods for matrix groups since the system can switch to projective groups by dividing out the subgroup of scalar matrices. The bulk of the recognition methods are then installed es methods for projective groups.</p>
 
 <div class="pcenter"><table class="GAPDocTable">
 <caption class="GAPDocTable"><b>Table: </b>Matrix group find homomorphism methods</caption>
@@ -230,19 +234,29 @@
 <td class="tdleft"><a href="chap3_mj.html#X796A682C78FFB9DC"><span class="RefLink">3.2-1</span></a></td>
 </tr>
 <tr>
+<td class="tdleft">1175</td>
+<td class="tdleft"><code class="code">KnownStabilizerChain</code></td>
+<td class="tdleft"><a href="chap3_mj.html#X86123FF278575E5D"><span class="RefLink">3.2-2</span></a></td>
+</tr>
+<tr>
 <td class="tdleft">1100</td>
 <td class="tdleft"><code class="code">DiagonalMatrices</code></td>
-<td class="tdleft"><a href="chap3_mj.html#X79C0EC2987BCA334"><span class="RefLink">3.2-2</span></a></td>
+<td class="tdleft"><a href="chap3_mj.html#X79C0EC2987BCA334"><span class="RefLink">3.2-3</span></a></td>
+</tr>
+<tr>
+<td class="tdleft">1050</td>
+<td class="tdleft"><code class="code">FewGensAbelian</code></td>
+<td class="tdleft"><a href="chap3_mj.html#X7829E7AF8753E697"><span class="RefLink">3.2-4</span></a></td>
 </tr>
 <tr>
 <td class="tdleft">1000</td>
 <td class="tdleft"><code class="code">ReducibleIso</code></td>
-<td class="tdleft"><a href="chap3_mj.html#X8499282F7825D28C"><span class="RefLink">3.2-3</span></a></td>
+<td class="tdleft"><a href="chap3_mj.html#X8499282F7825D28C"><span class="RefLink">3.2-5</span></a></td>
 </tr>
 <tr>
 <td class="tdleft">900</td>
 <td class="tdleft"><code class="code">GoProjective</code></td>
-<td class="tdleft"><a href="chap3_mj.html#X79A0674B7ECAFB62"><span class="RefLink">3.2-6</span></a></td>
+<td class="tdleft"><a href="chap3_mj.html#X79A0674B7ECAFB62"><span class="RefLink">3.2-8</span></a></td>
 </tr>
 </table><br /><p>&nbsp;</p><br />
 </div>
@@ -253,53 +267,65 @@
 
 <p>This method is successful if and only if all generators of a matrix group <var class="Arg">G</var> are equal to the identity. Otherwise, it returns <code class="keyw">false</code>.</p>
 
+<p><a id="X86123FF278575E5D" name="X86123FF278575E5D"></a></p>
+
+<h5>3.2-2 <span class="Heading"><code class="code">KnownStabilizerChain</code></span></h5>
+
+<p>TODO. use an already known stabilizer chain for this group</p>
+
 <p><a id="X79C0EC2987BCA334" name="X79C0EC2987BCA334"></a></p>
 
-<h5>3.2-2 <span class="Heading"><code class="code">DiagonalMatrices</code></span></h5>
+<h5>3.2-3 <span class="Heading"><code class="code">DiagonalMatrices</code></span></h5>
 
 <p>This method is successful if and only if all generators of a matrix group <var class="Arg">G</var> are diagonal matrices. Otherwise, it returns <code class="keyw">false</code>.</p>
 
+<p><a id="X7829E7AF8753E697" name="X7829E7AF8753E697"></a></p>
+
+<h5>3.2-4 <span class="Heading"><code class="code">FewGensAbelian</code></span></h5>
+
+<p>TODO. if very few generators, check IsAbelian and if yes, do KnownNilpotent</p>
+
 <p><a id="X8499282F7825D28C" name="X8499282F7825D28C"></a></p>
 
-<h5>3.2-3 <span class="Heading"><code class="code">ReducibleIso</code></span></h5>
+<h5>3.2-5 <span class="Heading"><code class="code">ReducibleIso</code></span></h5>
 
-<p>This method determines whether a matrix group <var class="Arg">G</var> acts irreducibly. If yes, then it returns <code class="keyw">false</code>. If <var class="Arg">G</var> acts reducibly then a composition series of the underlying module is computed and a base change is performed to write <var class="Arg">G</var> in a block lower triangular form. Also, the method passes a hint to the image group that it is in block lower triangular form, so the image immediately can make recursive calls for the actions on the diagonal blocks, and then to the lower <span class="SimpleMath">\(p\)</span>-part. For the image the method <code class="code">BlockLowerTriangular</code> (see <a href="chap3_mj.html#X85655B8082FCB0AD"><span class="RefLink">3.2-4</span></a>) is used.</p>
+<p>This method determines whether a matrix group <var class="Arg">G</var> acts irreducibly. If yes, then it returns <code class="keyw">false</code>. If <var class="Arg">G</var> acts reducibly then a composition series of the underlying module is computed and a base change is performed to write <var class="Arg">G</var> in a block lower triangular form. Also, the method passes a hint to the image group that it is in block lower triangular form, so the image immediately can make recursive calls for the actions on the diagonal blocks, and then to the lower <span class="SimpleMath">\(p\)</span>-part. For the image the method <code class="code">BlockLowerTriangular</code> (see <a href="chap3_mj.html#X85655B8082FCB0AD"><span class="RefLink">3.2-6</span></a>) is used.</p>
 
 <p>Note that this method is implemented in a way such that it can also be used as a method for a projective group <var class="Arg">G</var>. In that case the recognition info record has the <code class="code">!.projective</code> component bound to <code class="keyw">true</code> and this information is passed down to image and kernel.</p>
 
 <p><a id="X85655B8082FCB0AD" name="X85655B8082FCB0AD"></a></p>
 
-<h5>3.2-4 <span class="Heading"><code class="code">BlockLowerTriangular</code></span></h5>
+<h5>3.2-6 <span class="Heading"><code class="code">BlockLowerTriangular</code></span></h5>
 
-<p>This method is only called when a hint was passed down from the method <code class="code">ReducibleIso</code> (see <a href="chap3_mj.html#X8499282F7825D28C"><span class="RefLink">3.2-3</span></a>). In that case, it knows that a base change to block lower triangular form has been performed. The method can then immediately find a homomorphism by mapping to the diagonal blocks. It sets up this homomorphism and gives hints to image and kernel. For the image, the method <code class="code">BlockDiagonal</code> (see <a href="chap3_mj.html#X799EEBE27AF157B6"><span class="RefLink">3.2-5</span></a>) is used and for the kernel, the method <code class="code">LowerLeftPGroup</code> (see <a href="chap3_mj.html#X78A525FD797F429B"><span class="RefLink">3.2-8</span></a>) is used.</p>
+<p>This method is only called when a hint was passed down from the method <code class="code">ReducibleIso</code> (see <a href="chap3_mj.html#X8499282F7825D28C"><span class="RefLink">3.2-5</span></a>). In that case, it knows that a base change to block lower triangular form has been performed. The method can then immediately find a homomorphism by mapping to the diagonal blocks. It sets up this homomorphism and gives hints to image and kernel. For the image, the method <code class="code">BlockDiagonal</code> (see <a href="chap3_mj.html#X799EEBE27AF157B6"><span class="RefLink">3.2-7</span></a>) is used and for the kernel, the method <code class="code">LowerLeftPGroup</code> (see <a href="chap3_mj.html#X78A525FD797F429B"><span class="RefLink">3.2-10</span></a>) is used.</p>
 
 <p>Note that this method is implemented in a way such that it can also be used as a method for a projective group <var class="Arg">G</var>. In that case the recognition info record has the <code class="code">!.projective</code> component bound to <code class="keyw">true</code> and this information is passed down to image and kernel.</p>
 
 <p><a id="X799EEBE27AF157B6" name="X799EEBE27AF157B6"></a></p>
 
-<h5>3.2-5 <span class="Heading"><code class="code">BlockDiagonal</code></span></h5>
+<h5>3.2-7 <span class="Heading"><code class="code">BlockDiagonal</code></span></h5>
 
-<p>This method is only called when a hint was passed down from the method <code class="code">BlockLowerTriangular</code> (see <a href="chap3_mj.html#X85655B8082FCB0AD"><span class="RefLink">3.2-4</span></a>). In that case, it knows that the group is in block diagonal form. The method is used both in the matrix- and the projective case.</p>
+<p>This method is only called when a hint was passed down from the method <code class="code">BlockLowerTriangular</code> (see <a href="chap3_mj.html#X85655B8082FCB0AD"><span class="RefLink">3.2-6</span></a>). In that case, it knows that the group is in block diagonal form. The method is used both in the matrix- and the projective case.</p>
 
-<p>The method immediately delegates to projective methods handling all the diagonal blocks projectively. This is done by giving a hint to the factor to use the method <code class="code">BlocksModScalars</code> (see <a href="chap3_mj.html#X803E531C83954EC5"><span class="RefLink">3.3-4</span></a>) is given. The method for the kernel then has to deal with only scalar blocks, either projectively or with scalars, which is again done by giving a hint to either use <code class="code">BlockScalar</code> (see <a href="chap3_mj.html#X7B9301E97DE36543"><span class="RefLink">3.2-7</span></a>) or <code class="code">BlockScalarProj</code> (see <a href="chap3_mj.html#X7BFA205981277BD5"><span class="RefLink">3.3-13</span></a>) respectively.</p>
+<p>The method immediately delegates to projective methods handling all the diagonal blocks projectively. This is done by giving a hint to the factor to use the method <code class="code">BlocksModScalars</code> (see <a href="chap3_mj.html#X803E531C83954EC5"><span class="RefLink">3.3-4</span></a>) is given. The method for the kernel then has to deal with only scalar blocks, either projectively or with scalars, which is again done by giving a hint to either use <code class="code">BlockScalar</code> (see <a href="chap3_mj.html#X7B9301E97DE36543"><span class="RefLink">3.2-9</span></a>) or <code class="code">BlockScalarProj</code> (see <a href="chap3_mj.html#X7BFA205981277BD5"><span class="RefLink">3.3-13</span></a>) respectively.</p>
 
 <p>Note that this method is implemented in a way such that it can also be used as a method for a projective group <var class="Arg">G</var>. In that case the recognition info record has the <code class="code">!.projective</code> component bound to <code class="keyw">true</code> and this information is passed down to image and kernel.</p>
 
 <p><a id="X79A0674B7ECAFB62" name="X79A0674B7ECAFB62"></a></p>
 
-<h5>3.2-6 <span class="Heading"><code class="code">GoProjective</code></span></h5>
+<h5>3.2-8 <span class="Heading"><code class="code">GoProjective</code></span></h5>
 
 <p>This method defines a homomorphism from a matrix group <var class="Arg">G</var> into the projective group <var class="Arg">G</var> modulo scalar matrices. In fact, since projective groups in <strong class="pkg">GAP</strong> are represented as matrix groups, the homomorphism is the identity mapping and the only difference is that in the image the projective group methods can be applied. The bulk of the work in matrix recognition is done in the projective group setting.</p>
 
 <p><a id="X7B9301E97DE36543" name="X7B9301E97DE36543"></a></p>
 
-<h5>3.2-7 <span class="Heading"><code class="code">BlockScalar</code></span></h5>
+<h5>3.2-9 <span class="Heading"><code class="code">BlockScalar</code></span></h5>
 
-<p>This method is only called by a hint. Alongside with the hint it gets a block decomposition respected by the matrix group <var class="Arg">G</var> to be recognised and the promise, that all diagonal blocks of all group elements will only be scalar matrices. This method recursively builds a balanced tree and does scalar recognition in each leaf.</p>
+<p>This method is only called by a hint. Alongside with the hint it gets a block decomposition respected by the matrix group <var class="Arg">G</var> to be recognised and the promise that all diagonal blocks of all group elements will only be scalar matrices. This method recursively builds a balanced tree and does scalar recognition in each leaf.</p>
 
 <p><a id="X78A525FD797F429B" name="X78A525FD797F429B"></a></p>
 
-<h5>3.2-8 <span class="Heading"><code class="code">LowerLeftPGroup</code></span></h5>
+<h5>3.2-10 <span class="Heading"><code class="code">LowerLeftPGroup</code></span></h5>
 
 <p>This method is only called by a hint from <code class="code">BlockLowerTriangular</code> as the kernel of the homomorphism mapping to the diagonal blocks. The method uses the fact the this kernel is a <span class="SimpleMath">\(p\)</span>-group where <span class="SimpleMath">\(p\)</span> is the characteristic of the underlying field. It exploits this fact and uses this special structure to find nice generators and a method to express group elements in terms of these.</p>
 
@@ -309,7 +335,7 @@
 
 <p>THIS CHAPTER IS CURRENTLY A BIT OUT OF DATE!</p>
 
-<p>The following table gives an overview over the installed methods and their rank (higher rank means higher priority, the method is tried earlier, see Chapter <a href="/Users/mhorn/Projekte/GAP/repos/pkg/neunhoef/recogbase/doc/chap3_mj.html#X8058CC8187162644"><span class="RefLink">recogbase: Method Selection</span></a>). Note that the recognition for matrix group switches to projective recognition rather soon in the recognition process such that most recognition methods in fact are installed as methods for projective groups.</p>
+<p>The following table gives an overview over the installed methods and their rank (higher rank means higher priority, the method is tried earlier, see Chapter <a href="/Users/mhorn/Projekte/GAP/repos/pkg/my-pkgs/recogbase/doc/chap3_mj.html#X8058CC8187162644"><span class="RefLink">recogbase: Method Selection</span></a>). Note that the recognition for matrix group switches to projective recognition rather soon in the recognition process such that most recognition methods in fact are installed as methods for projective groups.</p>
 
 <div class="pcenter"><table class="GAPDocTable">
 <caption class="GAPDocTable"><b>Table: </b>Projective group find homomorphism methods</caption>
@@ -387,7 +413,7 @@
 
 <h5>3.3-3 <span class="Heading"><code class="code">ReducibleIso</code></span></h5>
 
-<p>This method is the same as the matrix group method with the same name (see <a href="chap3_mj.html#X8499282F7825D28C"><span class="RefLink">3.2-3</span></a>), which is able to take into account the projective mode.</p>
+<p>This method is the same as the matrix group method with the same name (see <a href="chap3_mj.html#X8499282F7825D28C"><span class="RefLink">3.2-5</span></a>), which is able to take into account the projective mode.</p>
 
 <p><a id="X803E531C83954EC5" name="X803E531C83954EC5"></a></p>
 
@@ -455,7 +481,7 @@
 
 <h5>3.3-13 <span class="Heading"><code class="code">BlockScalarProj</code></span></h5>
 
-<p>This method is only called by a hint. Alongside with the hint it gets a block decomposition respected by the matrix group <var class="Arg">G</var> to be recognised and the promise, that all diagonal blocks of all group elements will only be scalar matrices. This method simply norms the last diagonal block in all generators by multiplying with a scalar and then delegates to <code class="code">BlockScalar</code> (see <a href="chap3_mj.html#X7B9301E97DE36543"><span class="RefLink">3.2-7</span></a>) and matrix group mode to do the recognition.</p>
+<p>This method is only called by a hint. Alongside with the hint it gets a block decomposition respected by the matrix group <var class="Arg">G</var> to be recognised and the promise that all diagonal blocks of all group elements will only be scalar matrices. This method simply norms the last diagonal block in all generators by multiplying with a scalar and then delegates to <code class="code">BlockScalar</code> (see <a href="chap3_mj.html#X7B9301E97DE36543"><span class="RefLink">3.2-9</span></a>) and matrix group mode to do the recognition.</p>
 
 <p><a id="X81DB42647E8FA7B6" name="X81DB42647E8FA7B6"></a></p>
 

@@ -1,6 +1,6 @@
 name: recog
-version: 1.2.3
-date: 24/09/2014
+version: 1.2.4
+date: 07/01/2016
 description: A collection of group recognition methods
 
 authors:
@@ -31,7 +31,7 @@ maintainers:
     - name: Max Horn
       url: http://www.quendi.de/math
 
-GAP: ">=4.4.12"
+GAP: ">=4.6.3"
 
 needed-pkgs:
     - name: "GAPDoc"
@@ -42,10 +42,10 @@ needed-pkgs:
       url: "http://cage.ugent.be/geometry/forms.php"
     - name: "genss"
       version: ">= 1.3"
-      url: "http://gap-system.github.io/genss/"
+      url: "http://gap-packages.github.io/genss/"
     - name: "Orb"
       version: ">= 3.4"
-      url: "http://gap-system.github.io/orb/"
+      url: "http://gap-packages.github.io/orb/"
     - name: "FactInt"
       version: ">= 1.5.2"
       url: "http://www.gap-system.org/DevelopersPages/StefanKohl/factint.html"
@@ -53,18 +53,18 @@ needed-pkgs:
       version: ">= 1.4.0"
       url: "http://www.math.rwth-aachen.de/~Thomas.Breuer/atlasrep"
     - name: "recogbase"
-      version: ">= 1.0"
-      url: "http://gap-system.github.io/recogbase/"
+      version: ">= 1.2.3.1"
+      url: "http://gap-packages.github.io/recogbase/"
 
-www: http://gap-system.github.io/recog/
-readme: http://gap-system.github.io/recog/README
-packageinfo: http://gap-system.github.io/recog/PackageInfo.g
+www: http://gap-packages.github.io/recog/
+readme: http://gap-packages.github.io/recog/README
+packageinfo: http://gap-packages.github.io/recog/PackageInfo.g
 
 downloads:
     - name: .tar.gz
-      url: https://github.com/gap-system/recog/releases/download/v1.2.3/recog-1.2.3.tar.gz
+      url: https://github.com/gap-packages/recog/releases/download/v1.2.4/recog-1.2.4.tar.gz
     - name: .tar.bz2
-      url: https://github.com/gap-system/recog/releases/download/v1.2.3/recog-1.2.3.tar.bz2
+      url: https://github.com/gap-packages/recog/releases/download/v1.2.4/recog-1.2.4.tar.bz2
 
 abstract: <b>Warning:</b> This package is still under development and    this version is to be considered a working, but preliminary one. <p/>    This packages contains a collection of methods for the    constructive recognition of groups. It is mostly intended for    permutation groups, matrix groups and projective groups.
 

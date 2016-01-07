@@ -6,10 +6,10 @@
                   [1X A collection of group recognition methods [101X
   
   
-                                     1.2.3
+                                     1.2.4
   
   
-                                   24/09/2014
+                                   07/01/2016
   
   
                                  Max Neunhöffer
@@ -153,13 +153,15 @@
       3.1-9 [33X[0;0Y[10XStabChain[110X[133X
     3.2 [33X[0;0YMethods for matrix groups[133X
       3.2-1 [33X[0;0Y[10XTrivialMatrixGroup[110X[133X
-      3.2-2 [33X[0;0Y[10XDiagonalMatrices[110X[133X
-      3.2-3 [33X[0;0Y[10XReducibleIso[110X[133X
-      3.2-4 [33X[0;0Y[10XBlockLowerTriangular[110X[133X
-      3.2-5 [33X[0;0Y[10XBlockDiagonal[110X[133X
-      3.2-6 [33X[0;0Y[10XGoProjective[110X[133X
-      3.2-7 [33X[0;0Y[10XBlockScalar[110X[133X
-      3.2-8 [33X[0;0Y[10XLowerLeftPGroup[110X[133X
+      3.2-2 [33X[0;0Y[10XKnownStabilizerChain[110X[133X
+      3.2-3 [33X[0;0Y[10XDiagonalMatrices[110X[133X
+      3.2-4 [33X[0;0Y[10XFewGensAbelian[110X[133X
+      3.2-5 [33X[0;0Y[10XReducibleIso[110X[133X
+      3.2-6 [33X[0;0Y[10XBlockLowerTriangular[110X[133X
+      3.2-7 [33X[0;0Y[10XBlockDiagonal[110X[133X
+      3.2-8 [33X[0;0Y[10XGoProjective[110X[133X
+      3.2-9 [33X[0;0Y[10XBlockScalar[110X[133X
+      3.2-10 [33X[0;0Y[10XLowerLeftPGroup[110X[133X
     3.3 [33X[0;0YMethods for projective groups[133X
       3.3-1 [33X[0;0Y[10XTrivialProjectiveGroup[110X[133X
       3.3-2 [33X[0;0Y[10XProjDeterminant[110X[133X
