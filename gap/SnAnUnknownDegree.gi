@@ -79,6 +79,7 @@ end;
 # bolstering elements with respect to c.
 BindGlobal("BolsteringElements",
 function(G, c, eps, N, groupIsOne, groupIsEq)
+    local result, R, S, prebolsteringElms, i, r, cr, cr2;
     result := [];
     R := Int(Ceil(7 / 4 * Log2(Float(eps ^ -1))));
     S := 7 * N * R;
