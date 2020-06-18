@@ -16,7 +16,7 @@ ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
         # integer, loop variable
         i,a,
         # elements, in G
-        r,t,tPower,c,
+        r,t,tPower,tPowerOld,c,
         # integer, max power we need to consider in 3. Step
         maxPower,
         # integer, loop variables in 4. Step
@@ -87,7 +87,7 @@ function(G, c, eps, N, groupIsOne, groupIsEq)
     R := Int(Ceil(7 / 4 * Log2(Float(eps ^ -1))));
     S := 7 * N * R;
     prebolsteringElms := [];
-    i := 0
+    i := 0;
     # find pre-bolstering elements
     while i <= S and Length(prebolsteringElms) <= R do
         r := PseudoRandom(G);
@@ -114,4 +114,4 @@ function(G, c, eps, N, groupIsOne, groupIsEq)
         fi;
     od;
     return result;
-end;
+end);
