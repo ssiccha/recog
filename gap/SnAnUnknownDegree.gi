@@ -1,5 +1,74 @@
-#
-ThreeCycleCandidates := function()
+
+## Algorithm 4.1
+## The following algorithm constructs a set of putative 3-cycles. It is based on the simple observation
+## that the product of two involutions t1,t2 with |supp(t1) ∩ supp(t2)| = 1 squares to a 3-cycle.
+##
+## Input: Group G, upper error bound eps, upper degree bound N
+ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
+    local
+        # list, a set of three cycle candidates
+        threeCycleCandidates,
+        # list, a set of involutions
+        involutions,        
+        # integers, number of iterations
+        M,B,T,C,
+        # integer, prime, loop variable
+        p,
+        # integer, loop variable
+        i,a,
+        # elements, in G
+        r,t,tPower,c,
+        # integer, max power we need to consider in 3. Step
+        maxPower,
+        # integer, loop variables in 4. Step
+        numberOfCandidates, numberOfIterations;
+    
+    # 1. Step
+    # TODO: better iteration over primes
+    M := 1;
+    p := 3;
+    while p <= N do
+        M := M * p^LogInt(N, p);
+        p := NextPrimeInt(p);
+    od;
+    B := Int(Ceil( 13 * Log2(Float(N)) * Log2(3/Float(eps)) ));
+    T := Int(Ceil( 3 * Log2(3/Float(eps)) ));
+    C := Int(Ceil( 3 * Float(N) * Float(T) / 5 ));
+
+    # 2. + 3. Step
+    involutions := [];
+    maxPower := LogInt(N, 2);
+    for i in [1..B] do
+        r := PseudoRandom(G);
+        t := r^M;
+            
+        a := 0;
+        tPower := t;
+        repeat 
+            t := tPower; 
+            a := a + 1;
+            tPower := t^2; 
+        until a - 1 > maxPower or groupIsOne(tPower);
+
+        if a - 1 > maxPower then
+            return fail;
+        fi;
+        Add(involutions, t);
+    od;
+
+    # 4. + 5. Step
+    for t in involutions do
+        numberOfCandidates := 0;
+        numberOfIterations := 0;
+        repeat
+            c := t^PseudoRandom(G);
+            if not groupIsEq( t * c, c * t ) then
+                Add(threeCycleCandidates, (t * c)^2 );
+            fi;
+        until numberOfCandidates >= T or numberOfIterations >= C;
+    od;
+
+    return threeCycleCandidates;
 end;
 
 #######
