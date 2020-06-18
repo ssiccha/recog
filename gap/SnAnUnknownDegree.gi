@@ -69,7 +69,7 @@ ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
                 Add(threeCycleCandidates, (t * c) ^ 2);
                 nrNewCandidates := nrNewCandidates + 1;
             fi;
-            nrIterations := nrIterations;
+            nrIterations := nrIterations + 1;
         od;
     od;
     return threeCycleCandidates;
