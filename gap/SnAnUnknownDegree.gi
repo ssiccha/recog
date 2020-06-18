@@ -5,23 +5,22 @@
 # Input: Group G, upper error bound eps, upper degree bound N
 ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
     local
-    # list, a set of three cycle candidates
-    threeCycleCandidates,
-    # list, a set of involutions
-    involutions,
-    # integers, number of iterations
-    M,B,T,C,
-    # integer, prime, loop variable
-    p,
-    # integer, loop variable
-    i,a,
-    # elements, in G
-    r,t,tPower,c,
-    # integer, max power we need to consider in 3. Step
-    maxPower,
-    # integer, loop variables in 4. Step
-    numberOfCandidates, numberOfIterations;
-
+        # list, a set of three cycle candidates
+        threeCycleCandidates,
+        # list, a set of involutions
+        involutions,
+        # integers, number of iterations
+        M,B,T,C,
+        # integer, prime, loop variable
+        p,
+        # integer, loop variable
+        i,a,
+        # elements, in G
+        r,t,tPower,c,
+        # integer, max power we need to consider in 3. Step
+        maxPower,
+        # integer, loop variables in 4. Step
+        nrNewCandidates, nrIterations;
     # 1. Step
     # TODO: better iteration over primes
     M := 1;
@@ -33,8 +32,8 @@ ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
     B := Int(Ceil(13 * Log2(Float(N)) * Log2(3 / Float(eps))));
     T := Int(Ceil(3 * Log2(3 / Float(eps))));
     C := Int(Ceil(Float(3 * N * T / 5)));
-
     # 2. + 3. Step
+    # construct involutions
     involutions := [];
     maxPower := LogInt(N, 2);
     for i in [1 .. B] do
@@ -48,7 +47,6 @@ ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
             tPowerOld := tPower;
             tPower := tPower ^ 2;
         until a = maxPower or groupIsOne(tPower);
-
         if a = maxPower then
             # TODO: G can not be isomorphic to an alternating or symmetric,
             # which is more info than simply fail
@@ -56,23 +54,27 @@ ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
         fi;
         Add(involutions, tPowerOld);
     od;
-
     # 4. + 5. Step
+    # use the observation described in the comment above this function to
+    # generate candidate for three-cycles from the involutions.
+    threeCycleCandidates := [];
     for t in involutions do
-        numberOfCandidates := 0;
-        numberOfIterations := 0;
-        repeat
-            c := t^PseudoRandom(G);
-            if not groupIsEq( t * c, c * t ) then
-                Add(threeCycleCandidates, (t * c)^2 );
+        nrNewCandidates := 0;
+        nrIterations := 0;
+        while nrIterations < C and nrNewCandidates < T do
+            c := t ^ PseudoRandom(G);
+            # TODO: the paper says to form a set. do we really need to avoid
+            # duplicates?
+            if not groupIsEq(t * c, c * t) then
+                Add(threeCycleCandidates, (t * c) ^ 2);
+                nrNewCandidates := nrNewCandidates + 1;
             fi;
-        until numberOfCandidates >= T or numberOfIterations >= C;
+            nrIterations := nrIterations;
+        od;
     od;
-
     return threeCycleCandidates;
 end;
 
-#######
 # G: the group to recognize
 # c: possibly a 3-cycle
 # returns a list of group elements. If G is isomorphic to an alternating or
