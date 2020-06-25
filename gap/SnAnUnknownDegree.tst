@@ -1,9 +1,14 @@
 #@local testFunction, permToPermMat, degreesToTest, isos;
 #@local nonIsomorphicGroups;
 #@local g, c, r, i;
-# TODO
-# - projective
-# - use isomorphisms to verify BolsteringElements
+#
+# testing matrix:
+# - isomorphic: yes, no
+# different representations:
+# - permutation groups: natural, on 2-subsets
+# - finitely presented group
+# - permutation matrices: compressed matrices, uncompressed matrices
+# - projective matrix groups
 gap> testFunction := function(G, eps, N)
 >     local C, i;
 >     C := ThreeCycleCandidates(G, eps, N, IsOne, EQ);
@@ -13,8 +18,10 @@ gap> testFunction := function(G, eps, N)
 >         od;
 >     fi;
 > end;;
-gap> degreesToTest := [10, 20, 30, 40, 50, 60, 70];;
-gap> Append(degreesToTest, Primes{[5 .. 15]});;
+gap> degreesToTest := Concatenation(
+>     [10, 20, 30, 40, 50, 60, 70],
+>     Primes{[5 .. 15]}
+> );;
 # TODO: more non-isomorphic examples
 gap> nonIsomorphicGroups := [
 >     DihedralGroup(IsPermGroup,10),
@@ -23,12 +30,6 @@ gap> nonIsomorphicGroups := [
 >     DihedralGroup(IsPcGroup, 2000),
 >     SL(3,5),
 > ];;
-# isomorphisms into different representations
-# TODO
-# - on sets
-# - on tuples
-#   - first comp
-#   - diagonal
 gap> permToPermMat :=
 >   {x, deg, field}
 >   ->
@@ -49,7 +50,6 @@ gap> for i in [1 .. Length(testGroups)] do
 > od;
 
 # IsFixedPoint
-# TODO
 gap> g := (1,2,3,4,5,6,7,8);;
 gap> c := (1,2,3);;
 gap> r := (1,2)(4,5,6);;
@@ -60,7 +60,6 @@ gap> IsFixedPoint(g,c,r,IsOne,EQ);
 false
 
 # AdjustCycle
-# TODO
 gap> g := (1,2,3,4,5,6,7,8);;
 gap> c := (1,2,3);;
 gap> r := (1,2,3)(5,6);;
