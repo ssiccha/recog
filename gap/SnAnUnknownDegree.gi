@@ -190,3 +190,92 @@ function(g, c, r, groupIsOne, groupIsEq)
     return true;
 end);
 
+BindGlobal("AdjustCycle",
+function(g, c, r, k, groupIsOne, groupIsEq)
+    local
+        # list of 4 booleans, is point j fixed point
+        F,
+        # smallest fixed point
+        f1,
+        # second smallest fixed point
+        f2,
+        # smallest non-fixed point
+        m,
+        # conjugating element
+        x;
+    F := ListWithIdenticalEntries(4,false);
+    f1 := fail;
+    f2 := fail;
+    m := fail;
+    j := 0;
+    t := c ^ (g ^ -3);
+    # invariant: t = c ^ (g ^ (j - 3))
+    repeat
+        j := j + 1;
+        t := t ^ g;
+        if IsFixedPoint(g, t, r) then
+            if j <= 4 then
+                F[j] := true;
+            fi;
+            if f1 = fail then
+                f1 := j;
+            elif f2 = fail then
+                f2 := j;
+            fi;
+        elif m = fail then
+            m := j;
+        fi;
+    until j >= k or (j >= 4 and f1 <> fail and f2 <> fail and m <> fail)
+    if f1 = fail or f2 = fail or m =fail then
+        return fail
+    fi;
+    # case distinction on F as in the table of Algorithm 4.20
+    if F[1] then
+        if F[2] then
+            if F[3] then
+                # 1. Case
+                x := c ^ ((g * c ^ 2) ^ (m - 3) * c) * c;
+            else
+                # 2. Case
+                x := IsOne(c);
+            fi;
+        else
+            if F[3] then
+                if F[4] then
+                    # 3. Case
+                    x := c ^ g;
+                else
+                    # 4. Case
+                    x := (c ^ 2) ^ g;
+                fi;
+            else
+                # 5. Case
+                x := c ^ ((g * c ^ 2) ^ (f2 - 3) * c);
+            fi;
+        fi;
+    else
+        if F[2] then
+            if F[4] then
+                # 6. Case
+                x := c ^ (c ^ g);
+            else
+                if F[3] then
+                    # 7. Case
+                    x := (c ^ 2) ^ (c ^ g);
+                else
+                    # 8. Case
+                    x := c ^ ((g * c ^ 2) ^ (f2 - 3) * c ^ g);
+                fi;
+            fi;
+        else
+            if F[3] then
+                # 9. Case
+                x := (c ^ 2) ^ ((g * c ^ 2) ^ (f2 - 3)) * c ^ 2;
+            else
+                # 10. Case
+                x := c ^ ((g * c ^ 2) ^ (f2 - 3)) * c ^ ((g * c ^ 2) ^ (f1 - 3));
+            fi;
+        fi;
+    fi;
+    return r^x;
+end);
