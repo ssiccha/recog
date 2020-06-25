@@ -1,7 +1,9 @@
-#@local degrees, testGroups, G, testFunction, i
+#@local testFunction, permToPermMat, degreesToTest, isos;
+#@local nonIsomorphicGroups;
+#@local g, c, r, i;
 # TODO
 # - projective
-# - exploit isomorphisms to verify BolsteringElements
+# - use isomorphisms to verify BolsteringElements
 gap> testFunction := function(G, eps, N)
 >     local C, i;
 >     C := ThreeCycleCandidates(G, eps, N, IsOne, EQ);
@@ -11,16 +13,8 @@ gap> testFunction := function(G, eps, N)
 >         od;
 >     fi;
 > end;;
-gap> permToPermMat :=
->   {x, deg, field}
->   ->
->   ImmutableMatrix(field, PermutationMat(x, deg, field));;
-gap> degrees := [30, 100, 30, 100, 30, 30];;
 gap> degreesToTest := [10, 20, 30, 40, 50, 60, 70];;
 gap> Append(degreesToTest, Primes{[5 .. 15]});;
-gap> # TODO: use permToPermMat with varying degrees and fields
-gap> isos := [];;
-
 # TODO: more non-isomorphic examples
 gap> nonIsomorphicGroups := [
 >     DihedralGroup(IsPermGroup,10),
@@ -29,6 +23,19 @@ gap> nonIsomorphicGroups := [
 >     DihedralGroup(IsPcGroup, 2000),
 >     SL(3,5),
 > ];;
+# isomorphisms into different representations
+# TODO
+# - on sets
+# - on tuples
+#   - first comp
+#   - diagonal
+gap> permToPermMat :=
+>   {x, deg, field}
+>   ->
+>   ImmutableMatrix(field, PermutationMat(x, deg, field));;
+gap> # TODO: use permToPermMat with varying degrees and fields
+gap> isos := [];;
+
 
 # ThreeCycleCandidates
 gap> for i in [1 .. Length(testGroups)] do
@@ -43,15 +50,19 @@ gap> for i in [1 .. Length(testGroups)] do
 
 # IsFixedPoint
 # TODO
-gap> g := (1,2,3,4,5,6,7,8);
-(1,2,3,4,5,6,7,8)
-gap> c := (1,2,3);
-(1,2,3)
-gap> r := (1,2)(4,5,6);
-(1,2)(4,5,6)
+gap> g := (1,2,3,4,5,6,7,8);;
+gap> c := (1,2,3);;
+gap> r := (1,2)(4,5,6);;
 gap> IsFixedPoint(g,c,r,IsOne,EQ);
 true
-gap> r := (2,3,4);
-(2,3,4)
+gap> r := (2,3,4);;
 gap> IsFixedPoint(g,c,r,IsOne,EQ);
 false
+
+# AdjustCycle
+# TODO
+gap> g := (1,2,3,4,5,6,7,8);;
+gap> c := (1,2,3);;
+gap> r := (1,2,3)(5,6);;
+gap> AdjustCycle(g, c, r, 8, IsOne, EQ);
+(3,4,7)(5,6)
