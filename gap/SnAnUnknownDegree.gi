@@ -133,71 +133,60 @@ function(g, c, r, groupIsOne, groupIsEq)
         temp,
         # sets of elements of G
         H1, H2;
+    # Helper functions
+    constructH1 := function(c, cg, cg3, cg4)
+        local H1;
+        H1 := ListWithIdenticalEntries(5,0);
+        H1[1] := c ^ 2;
+        H1[2] := c ^ cg;
+        H1[3] := H1[2] ^ cg3;
+        H1[4] := H1[3] ^ cg3;
+        H1[5] := H1[4] ^ cg4;
+        return H1;
+    end;
+    constructH2 := function(c, cg, cg3, cg4)
+        local H2;
+        H2 := ListWithIdenticalEntries(5,0);
+        H2[1] := c;
+        H2[2] := cg;
+        H2[3] := H2[2] ^ cg3;
+        H2[4] := H2[3] ^ cg3;
+        H2[5] := H2[4] ^ cg4;
+        return H2;
+    end;
+    isElmPassingTest := function(x, H, groupIsOne)
+        local nrTrivialComm, h;
+        nrTrivialComm := 0;
+        for h in H do
+            if groupIsOne(Comm(x, h)) then
+                nrTrivialComm := nrTrivialComm + 1;
+            fi;
+            if nrTrivialComm >= 2 then
+                return false;
+            fi;
+        od;
+        return true;
+    end;
     cg := c ^ g;
     cg2 := cg ^ g;
     cg3 := cg2 ^ g;
     cg4 := cg3 ^ g;
-    temp := IsFixedPoint_ConstructH1H2(c, cg, cg3, cg4);
-    H1 := temp[1];
-    H2 := temp[2];
-    if not IsFixedPoint_IsElmPassingTest(c ^ r, H1, H2, groupIsOne) then
-        return false;
-    fi;
-    if not IsFixedPoint_IsElmPassingTest(cg2 ^ r, H1, H2, groupIsOne) then
-        return false;
-    fi;
-    if not IsFixedPoint_IsElmPassingTest(((cg2 ^ cg3) ^ cg4) ^ r, H1, H2, groupIsOne) then
-        return false;
-    fi;
+    H1 := constructH1(c, cg, cg3, cg4);
+    # Test whether an elm of the set X, here called XX, commutes with at least
+    # two elements of H1.
+    XX := ListWithIdenticalEntries(3, 0);
+    XX[1] := c ^ r;
+    if not isElmPassingTest(XX[1], H1, groupIsOne) then return false; fi;
+    XX[2] := cg2 ^ r;
+    if not isElmPassingTest(XX[2], H1, groupIsOne) then return false; fi;
+    XX[3] := ((cg2 ^ cg3) ^ cg4) ^ r;
+    if not isElmPassingTest(XX[3], H1, groupIsOne) then return false; fi;
+    # Test whether an elm of the set X, here called XX, commutes with at least
+    # two elements of H2.
+    H2 := constructH2(c, cg, cg3, cg4);
+    if not isElmPassingTest(XX[1], H2, groupIsOne) then return false; fi;
+    if not isElmPassingTest(XX[2], H2, groupIsOne) then return false; fi;
+    if not isElmPassingTest(XX[3], H2, groupIsOne) then return false; fi;
     return true;
 end);
 
-BindGlobal("IsFixedPoint_ConstructH1H2",
-function(c, cg, cg3, cg4)
-    local H1, H2, t;
-    H1 := ListWithIdenticalEntries(5,0);
-    H1[1] := c ^ 2;
-    t := c ^ cg;
-    H1[2] := t;
-    t := t ^ cg3;
-    H1[3] := t;
-    t := t ^ cg3;
-    H1[4] := t;
-    t := t ^ cg4;
-    H1[5] := t;
-    H2 := ListWithIdenticalEntries(5,0);
-    H2[1] := c;
-    t := cg;
-    H2[2] := t;
-    t := t ^ cg3;
-    H2[3] := t;
-    t := t ^ cg3;
-    H2[4] := t;
-    t := t ^ cg4;
-    H2[5] := t;
-    return [H1, H2];
-end);
-
-BindGlobal("IsFixedPoint_IsElmPassingTest",
-function(x, H1, H2, groupIsOne)
-    local nrTrivialComm, h;
-    nrTrivialComm := 0;
-    for h in H1 do
-        if groupIsOne(Comm(x, h)) then
-            nrTrivialComm := nrTrivialComm + 1;
-        fi;
-        if nrTrivialComm >= 2 then
-            return false;
-        fi;
-    od;
-    nrTrivialComm := 0;
-    for h in H2 do
-        if groupIsOne(Comm(x, h)) then
-            nrTrivialComm := nrTrivialComm + 1;
-        fi;
-        if nrTrivialComm >= 2 then
-            return false;
-        fi;
-    od;
-    return true;
-end);
