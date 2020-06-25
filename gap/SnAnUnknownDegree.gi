@@ -193,6 +193,14 @@ function(g, c, r, groupIsOne, groupIsEq)
     return true;
 end);
 
+# g: a k-cycle matching c of a group G
+# c: a 3-cycle of a group G
+# r: element of a group G
+# W.l.o.g. let g = (1, ..., k) and c = (1, 2, 3).
+# If the support of g has at least one point in common with the support of r
+# and at least two points of support of g are fixed by r,
+# the algorithm return a conjugate r^x such that r fixes the points 1, 2
+# but not the point 3.
 BindGlobal("AdjustCycle",
 function(g, c, r, k, groupIsOne, groupIsEq)
     local
@@ -204,6 +212,10 @@ function(g, c, r, k, groupIsOne, groupIsEq)
         f2,
         # smallest non-fixed point
         m,
+        # integer, loop variable over [1 .. k]
+        j,
+        # element of G, loop variable
+        t,
         # conjugating element
         x;
     F := ListWithIdenticalEntries(4,false);
@@ -216,7 +228,7 @@ function(g, c, r, k, groupIsOne, groupIsEq)
     repeat
         j := j + 1;
         t := t ^ g;
-        if IsFixedPoint(g, t, r) then
+        if IsFixedPoint(g, t, r, groupIsOne, groupIsEq) then
             if j <= 4 then
                 F[j] := true;
             fi;
@@ -228,9 +240,9 @@ function(g, c, r, k, groupIsOne, groupIsEq)
         elif m = fail then
             m := j;
         fi;
-    until j >= k or (j >= 4 and f1 <> fail and f2 <> fail and m <> fail)
+    until j >= k or (j >= 4 and f1 <> fail and f2 <> fail and m <> fail);
     if f1 = fail or f2 = fail or m =fail then
-        return fail
+        return fail;
     fi;
     # case distinction on F as in the table of Algorithm 4.20
     if F[1] then
