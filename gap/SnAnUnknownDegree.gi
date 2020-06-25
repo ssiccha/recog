@@ -155,26 +155,26 @@ end);
 BindGlobal("IsFixedPoint_ConstructH1H2",
 function(c, cg, cg3, cg4)
     local H1, H2, t;
-    H1 := [];
-    Add(H1, c ^ 2);
+    H1 := ListWithIdenticalEntries(5,0);
+    H1[1] := c ^ 2;
     t := c ^ cg;
-    Add(H1, t);
+    H1[2] := t;
     t := t ^ cg3;
-    Add(H1, t);
+    H1[3] := t;
     t := t ^ cg3;
-    Add(H1, t);
+    H1[4] := t;
     t := t ^ cg4;
-    Add(H1, t);
-    H2 := [];
-    Add(H2, c);
+    H1[5] := t;
+    H2 := ListWithIdenticalEntries(5,0);
+    H2[1] := c;
     t := cg;
-    Add(H2, t);
+    H2[2] := t;
     t := t ^ cg3;
-    Add(H2, t);
+    H2[3] := t;
     t := t ^ cg3;
-    Add(H2, t);
+    H2[4] := t;
     t := t ^ cg4;
-    Add(H2, t);
+    H2[5] := t;
     return [H1, H2];
 end);
 
