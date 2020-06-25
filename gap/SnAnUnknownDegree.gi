@@ -122,8 +122,9 @@ end);
 # g: a cycle matching c of a group G
 # c: a 3-cycle of a group G
 # r: arbitrary element of a group G
-# decides whether the single point in the intersection
-# of the supports of c and c^(g^2) is fixed by r
+# The supports of c and c^(g^2) have exactly one point, say alpha, in common.
+# Let phi be an isomorphism from G to a natural alternating or symmetric group.
+# This function decides whether alpha is a fixed point of phi(r).
 BindGlobal("IsFixedPoint",
 function(g, c, r, groupIsOne, groupIsEq)
     local
