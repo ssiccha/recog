@@ -1,12 +1,17 @@
+#@local degrees, testGroups, G
+# TODO
+# - projective
+# - exploit isomorphisms to verify BolsteringElements
 gap> testFunction := function(G, eps, N)
 >     local C, i;
 >     C := ThreeCycleCandidates(G, eps, N, IsOne, EQ);
->     if C <> fail then
+>     if C <> NeverApplicable then
 >         for i in [1 .. 10] do
 >             BolsteringElements(G, PseudoRandom(C), eps, N, IsOne, EQ);
 >         od;
 >     fi;
 > end;;
+gap> degrees := [30, 100, 30, 100, 30, 30, 200, 200, 30, 30, 30];;
 gap> testGroups := [
 >     SymmetricGroup(10),
 >     SymmetricGroup(100),
@@ -16,12 +21,24 @@ gap> testGroups := [
 >     DihedralGroup(IsPcGroup, 10),
 >     DihedralGroup(IsPermGroup, 2000),
 >     DihedralGroup(IsPcGroup, 2000),
->     Group(List(GeneratorsOfGroup(SymmetricGroup(10)), x -> PermutationMat(x, 10, GF(9)))),
->     Group(List(GeneratorsOfGroup(SymmetricGroup(10)), x -> PermutationMat(x, 10, GF(9))))^PseudoRandom(GL(10,9)),
+>     Group(List(
+>         GeneratorsOfGroup(SymmetricGroup(10)),
+>         x -> ImmutableMatrix(GF(9), PermutationMat(x, 10, GF(9)))
+>     )),
+>     Group(List(
+>         GeneratorsOfGroup(SymmetricGroup(10)),
+>         x -> ImmutableMatrix(GF(9), PermutationMat(x, 10, GF(9)))^PseudoRandom(GL(10,9))
+>     )),
 >     SL(3,5)
 > ];;
-gap> for G in testGroups do 
->     #Print(Order(G), " \n");
->     testFunction(G, 1/100, 100);
+
+# ThreeCycleCandidates
+gap> for i in [1 .. Length(testGroups)] do 
+>     ThreeCycleCandidates(testGroups[i], 1/100, degrees[i], IsOne, EQ);
 > od;
-gap> 
+
+# BolsteringElements
+gap> for i in [1 .. Length(testGroups)] do 
+>     G := testGroups[i];
+>     BolsteringElements(G, PseudoRandom(G), 1/100, degrees[i], IsOne, EQ);
+> od;
