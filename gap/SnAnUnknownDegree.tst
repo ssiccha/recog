@@ -9,6 +9,8 @@
 # - finitely presented group
 # - permutation matrices: compressed matrices, uncompressed matrices
 # - projective matrix groups
+#
+# TODO: Use RECOG.TestGroup?
 gap> testFunction := function(G, eps, N)
 >     local C, i;
 >     C := ThreeCycleCandidates(G, eps, N, IsOne, EQ);

@@ -64,10 +64,9 @@ function(G, eps, N, groupIsOne, groupIsEq)
         nrIterations := 0;
         while nrIterations < C and nrNewCandidates < T do
             c := t ^ PseudoRandom(G);
-            # TODO: the paper says to form a set. Do we really need to avoid
-            # duplicates? Or is it quicker to simply check some elements a few
-            # times? Benchmark this with groups that are so small that we
-            # possibly generate lots of the same elements.
+            # TODO: form a set. Can we assume that group elements have an
+            # ordering and simply call Set? Benchmark this with groups that are
+            # so small that we possibly generate lots of the same elements.
             if not groupIsEq(t * c, c * t) then
                 Add(threeCycleCandidates, (t * c) ^ 2);
                 nrNewCandidates := nrNewCandidates + 1;
@@ -199,7 +198,7 @@ end);
 # W.l.o.g. let g = (1, ..., k) and c = (1, 2, 3).
 # If the support of g has at least one point in common with the support of r
 # and at least two points of support of g are fixed by r,
-# the algorithm return a conjugate r^x such that r fixes the points 1, 2
+# then the algorithm returns a conjugate r^x such that r fixes the points 1, 2
 # but not the point 3.
 BindGlobal("AdjustCycle",
 function(g, c, r, k, groupIsOne, groupIsEq)
