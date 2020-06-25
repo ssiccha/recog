@@ -1,8 +1,10 @@
+# Input: Group G, upper error bound eps, upper degree bound N
+#
 # The following algorithm constructs a set of possible 3-cycles. It is based
 # on the simple observation that the product of two involutions t1, t2, which
 # only move one common point, squares to a 3-cycle.
 #
-# Input: Group G, upper error bound eps, upper degree bound N
+# Either returns a list of elements of G or NeverApplicable
 ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
     local
         # list, a set of three cycle candidates
@@ -48,9 +50,7 @@ ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
             tPower := tPower ^ 2;
         until a = maxPower or groupIsOne(tPower);
         if a = maxPower then
-            # TODO: G can not be isomorphic to an alternating or symmetric,
-            # which is more info than simply fail
-            return fail;
+            return NeverApplicable;
         fi;
         Add(involutions, tPowerOld);
     od;
@@ -63,8 +63,10 @@ ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
         nrIterations := 0;
         while nrIterations < C and nrNewCandidates < T do
             c := t ^ PseudoRandom(G);
-            # TODO: the paper says to form a set. do we really need to avoid
-            # duplicates?
+            # TODO: the paper says to form a set. Do we really need to avoid
+            # duplicates? Or is it quicker to simply check some elements a few
+            # times? Benchmark this with groups that are so small that we
+            # possibly generate lots of the same elements.
             if not groupIsEq(t * c, c * t) then
                 Add(threeCycleCandidates, (t * c) ^ 2);
                 nrNewCandidates := nrNewCandidates + 1;
