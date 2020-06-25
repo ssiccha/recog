@@ -1,4 +1,5 @@
 gap> testFunction := function(G, eps, N)
+>     local C, i;
 >     C := ThreeCycleCandidates(G, eps, N, IsOne, EQ);
 >     if C <> fail then
 >         for i in [1 .. 10] do
