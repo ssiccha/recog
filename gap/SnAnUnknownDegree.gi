@@ -133,7 +133,9 @@ function(g, c, r, groupIsOne, groupIsEq)
         # temporary holder of H1, H2
         temp,
         # sets of elements of G
-        H1, H2;
+        H1, H2, XX,
+        # helper functions
+        constructH1, constructH2, isElmPassingTest;
     # Helper functions
     constructH1 := function(c, cg, cg3, cg4)
         local H1;
