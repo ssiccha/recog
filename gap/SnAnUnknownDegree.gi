@@ -115,3 +115,61 @@ function(G, c, eps, N, groupIsOne, groupIsEq)
     od;
     return result;
 end);
+
+# g: a cycle matching c of a group G
+# c: a 3-cycle of a group G
+# r: arbitrary element of a group G
+# decides whether the single point in the intersection 
+# of the supports of c and c^(g^2) is fixed by r
+BindGlobal("IsFixedPoint",
+function(g, c, r, groupIsOne, groupIsEq)
+    local
+    # sets of elements of G
+    X, H1, H2,
+    # elements of the above sets, loop variable
+    x, h,
+    # counter of commutators that are trivial
+    nrTrivialComm;
+    X := [
+        c ^ r,
+        c ^ (g ^ 2 * r),
+        c ^ (g ^ 2 * c ^ (g ^ 3) * c ^ (g ^ 4) * r),
+    ];
+    H1 := [
+        c ^ 2,
+        c ^ (c ^ g),
+        c ^ (c ^ g * c ^ (g ^ 3)),
+        c ^ (c ^ g * (c ^ (g ^ 3)) ^ 2),
+        c ^ (c ^ g * (c ^ (g ^ 3)) ^ 2 * c ^ (g ^ 4))
+    ];
+    for x in X do
+        nrTrivialComm := 0;
+        for h in H1 do
+            if groupIsOne(Comm(x, h)) then
+                nrTrivialComm := nrTrivialComm + 1;
+            fi;
+            if nrTrivialComm >= 2 then
+                return false;
+            fi;
+        od;
+    od;
+    H2 := [
+        c,
+        c ^ g,
+        c ^ (g * c ^ (g ^ 3)),
+        c ^ (g * (c ^ (g ^ 3)) ^ 2),
+        c ^ (g * (c ^ (g ^ 3)) ^ 2 * c ^ (g ^ 4))
+    ];
+    for x in X do
+        nrTrivialComm := 0;
+        for h in H2 do
+            if groupIsOne(Comm(x, h)) then
+                nrTrivialComm := nrTrivialComm + 1;
+            fi;
+            if nrTrivialComm >= 2 then
+                return false;
+            fi;
+        od;
+    od;
+    return true;
+end);
