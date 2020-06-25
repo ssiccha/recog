@@ -124,52 +124,77 @@ end);
 BindGlobal("IsFixedPoint",
 function(g, c, r, groupIsOne, groupIsEq)
     local
-    # sets of elements of G
-    X, H1, H2,
-    # elements of the above sets, loop variable
-    x, h,
-    # counter of commutators that are trivial
-    nrTrivialComm;
-    X := [
-        c ^ r,
-        c ^ (g ^ 2 * r),
-        c ^ (g ^ 2 * c ^ (g ^ 3) * c ^ (g ^ 4) * r),
-    ];
-    H1 := [
-        c ^ 2,
-        c ^ (c ^ g),
-        c ^ (c ^ g * c ^ (g ^ 3)),
-        c ^ (c ^ g * (c ^ (g ^ 3)) ^ 2),
-        c ^ (c ^ g * (c ^ (g ^ 3)) ^ 2 * c ^ (g ^ 4))
-    ];
-    for x in X do
-        nrTrivialComm := 0;
-        for h in H1 do
-            if groupIsOne(Comm(x, h)) then
-                nrTrivialComm := nrTrivialComm + 1;
-            fi;
-            if nrTrivialComm >= 2 then
-                return false;
-            fi;
-        od;
+        # respectively c ^ (g ^ i)
+        cg, cg2, cg3, cg4
+        # temporary holder of H1, H2
+        temp,
+        # sets of elements of G
+        H1, H2;
+    cg := c ^ g;
+    cg2 := cg ^ g;
+    cg3 := cg2 ^ g;
+    cg4 := cg3 ^ g;
+    temp := IsFixedPoint_ConstructH1H2(c, cg, cg3, cg4);
+    H1 := temp[1];
+    H2 := temp[2];
+    if not IsFixedPoint_IsElmPassingTest(c ^ r, H1, H2) then
+        return false;
+    fi;
+    if not IsFixedPoint_IsElmPassingTest(cg2 ^ r, H1, H2) then
+        return false;
+    fi;
+    if not IsFixedPoint_IsElmPassingTest(((cg2 ^ cg3) ^ cg4) ^ r, H1, H2) then
+        return false;
+    fi;
+    return true;
+end);
+
+BindGlobal("IsFixedPoint_ConstructH1H2",
+function(c, cg, cg3, cg4)
+    local H1, H2, t;
+    H1 := [];
+    Add(H1, c ^ 2);
+    t := c ^ cg;
+    Add(H1, t);
+    t := t ^ cg3;
+    Add(H1, t);
+    t := t ^ cg3;
+    Add(H1, t);
+    t := t ^ cg4;
+    Add(H1, t);
+    H2 := [];
+    Add(H2, c);
+    t := cg;
+    Add(H2, t);
+    t := t ^ cg3
+    Add(H2, t);
+    t := t ^ cg3;
+    Add(H2, t);
+    t := t ^ cg4;
+    Add(H2, t);
+    return [H1, H2];
+end);
+
+BindGlobal("IsFixedPoint_IsElmPassingTest",
+function(x, H1, H2)
+    local nrTrivialComm, h;
+    nrTrivialComm := 0;
+    for h in H1 do
+        if groupIsOne(Comm(x, h)) then
+            nrTrivialComm := nrTrivialComm + 1;
+        fi;
+        if nrTrivialComm >= 2 then
+            return false;
+        fi;
     od;
-    H2 := [
-        c,
-        c ^ g,
-        c ^ (g * c ^ (g ^ 3)),
-        c ^ (g * (c ^ (g ^ 3)) ^ 2),
-        c ^ (g * (c ^ (g ^ 3)) ^ 2 * c ^ (g ^ 4))
-    ];
-    for x in X do
-        nrTrivialComm := 0;
-        for h in H2 do
-            if groupIsOne(Comm(x, h)) then
-                nrTrivialComm := nrTrivialComm + 1;
-            fi;
-            if nrTrivialComm >= 2 then
-                return false;
-            fi;
-        od;
+    nrTrivialComm := 0;
+    for h in H2 do
+        if groupIsOne(Comm(x, h)) then
+            nrTrivialComm := nrTrivialComm + 1;
+        fi;
+        if nrTrivialComm >= 2 then
+            return false;
+        fi;
     od;
     return true;
 end);
