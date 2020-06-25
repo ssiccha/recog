@@ -5,7 +5,8 @@
 # only move one common point, squares to a 3-cycle.
 #
 # Either returns a list of elements of G or NeverApplicable
-ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
+BindGlobal("ThreeCycleCandidates",
+function(G, eps, N, groupIsOne, groupIsEq)
     local
         # list, a set of three cycle candidates
         threeCycleCandidates,
@@ -75,7 +76,7 @@ ThreeCycleCandidates := function(G, eps, N, groupIsOne, groupIsEq)
         od;
     od;
     return threeCycleCandidates;
-end;
+end);
 
 # G: the group to recognize
 # c: possibly a 3-cycle
@@ -127,7 +128,7 @@ BindGlobal("IsFixedPoint",
 function(g, c, r, groupIsOne, groupIsEq)
     local
         # respectively c ^ (g ^ i)
-        cg, cg2, cg3, cg4
+        cg, cg2, cg3, cg4,
         # temporary holder of H1, H2
         temp,
         # sets of elements of G
@@ -139,13 +140,13 @@ function(g, c, r, groupIsOne, groupIsEq)
     temp := IsFixedPoint_ConstructH1H2(c, cg, cg3, cg4);
     H1 := temp[1];
     H2 := temp[2];
-    if not IsFixedPoint_IsElmPassingTest(c ^ r, H1, H2) then
+    if not IsFixedPoint_IsElmPassingTest(c ^ r, H1, H2, groupIsOne) then
         return false;
     fi;
-    if not IsFixedPoint_IsElmPassingTest(cg2 ^ r, H1, H2) then
+    if not IsFixedPoint_IsElmPassingTest(cg2 ^ r, H1, H2, groupIsOne) then
         return false;
     fi;
-    if not IsFixedPoint_IsElmPassingTest(((cg2 ^ cg3) ^ cg4) ^ r, H1, H2) then
+    if not IsFixedPoint_IsElmPassingTest(((cg2 ^ cg3) ^ cg4) ^ r, H1, H2, groupIsOne) then
         return false;
     fi;
     return true;
@@ -168,7 +169,7 @@ function(c, cg, cg3, cg4)
     Add(H2, c);
     t := cg;
     Add(H2, t);
-    t := t ^ cg3
+    t := t ^ cg3;
     Add(H2, t);
     t := t ^ cg3;
     Add(H2, t);
@@ -178,7 +179,7 @@ function(c, cg, cg3, cg4)
 end);
 
 BindGlobal("IsFixedPoint_IsElmPassingTest",
-function(x, H1, H2)
+function(x, H1, H2, groupIsOne)
     local nrTrivialComm, h;
     nrTrivialComm := 0;
     for h in H1 do
