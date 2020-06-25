@@ -1,4 +1,4 @@
-#@local degrees, testGroups, G
+#@local degrees, testGroups, G, testFunction, i
 # TODO
 # - projective
 # - exploit isomorphisms to verify BolsteringElements
@@ -33,12 +33,12 @@ gap> testGroups := [
 > ];;
 
 # ThreeCycleCandidates
-gap> for i in [1 .. Length(testGroups)] do 
+gap> for i in [1 .. Length(testGroups)] do
 >     ThreeCycleCandidates(testGroups[i], 1/100, degrees[i], IsOne, EQ);
 > od;
 
 # BolsteringElements
-gap> for i in [1 .. Length(testGroups)] do 
+gap> for i in [1 .. Length(testGroups)] do
 >     G := testGroups[i];
 >     BolsteringElements(G, PseudoRandom(G), 1/100, degrees[i], IsOne, EQ);
 > od;
