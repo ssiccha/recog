@@ -243,7 +243,7 @@ function(g, c, r, k, groupIsOne, groupIsEq)
                 x := c ^ ((g * c ^ 2) ^ (m - 3) * c) * c;
             else
                 # 2. Case
-                x := IsOne(c);
+                x := One(c);
             fi;
         else
             if F[3] then
