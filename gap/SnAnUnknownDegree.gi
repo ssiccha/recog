@@ -9,12 +9,16 @@
 BindGlobal("ThreeCycleCandidatesIterator",
     function(G, eps, N, groupIsOne, groupIsEq)
     local
-        # helper functions
-        tryThreeCycleCandidate, oneThreeCycleCandidate,
+        # involution
+        t,
         # integers, controlling the number of iterations
         M, B, T, C, logInt2N,
         # integer, prime, loop variable
-        p;
+        p,
+        # counters
+        nrInvolutions, nrTriedConjugates, nrThreeCycleCandidates,
+        # helper functions
+        tryThreeCycleCandidate, oneThreeCycleCandidate;
     # Step 1: Initialization
     # The current involution t_i
     t := fail;
