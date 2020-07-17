@@ -55,14 +55,15 @@ function(iter)
         # elements, in G
         r,t,tPower,tPowerOld,c;
     if IsDoneIterator(iter) then return fail; fi;
-    # 2. + 3. Step : construct an involution
-    # check if we have tried enough three cycle candidates for the current involution t
-    # if this is the case, we need to construct the next involution
+    # 2. + 3. Step : Involution
+    # Check if we either tried enough conjugates or
+    # constructed enough three cycle candidates for the current involution t.
+    # If this is the case, we need to construct the next involution
     if iter!.t = fail or iter!.nrTriedConjugates >= iter!.C or iter!.nrThreeCycleCandidates >= iter!.T then
         r := PseudoRandom(iter!.G);
         a := 0;
         tPower := r^iter!.M;
-        # invariant: tPower = t ^ (2 ^ a)
+        # Invariant: tPower = (r ^ M) ^ (2 ^ a)
         repeat
             a := a + 1;
             tPowerOld := tPower;
@@ -76,9 +77,9 @@ function(iter)
         iter!.nrTriedConjugates := 0;
         iter!.nrThreeCycleCandidates := 0;
     fi;
-    # 4. + 5. Step
-    # use the observation described in the comment above this function to
-    # generate candidate for three-cycles from the involutions.
+    # 4. + 5. Step : Three Cycle Candidate
+    # Try to construct a three cycle candidate via a conjugate of t by
+    # using the observation described in the comment above this function.
     iter!.nrTriedConjugates := iter!.nrTriedConjugates + 1;
     c := iter!.t ^ PseudoRandom(iter!.G);
     if not iter!.groupIsEq(iter!.t * c, c * iter!.t) then
