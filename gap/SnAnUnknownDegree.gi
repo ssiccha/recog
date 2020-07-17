@@ -43,6 +43,9 @@ BindGlobal("ThreeCycleCandidatesIterator",
 end);
 
 # Either return an element of G or fail or NeverApplicable
+# nrInvolutions counts the constructed involutions t_i in 2. + 3. Step
+# nrTriedConjugates counts the elements c in 4. Step that we use to conjugate the current involution t_i
+# nrThreeCycleCandidates counts the size of the set Gamma_i in 4. Step for the current involution t_i
 # TODO: take care of duplicate candidates?
 BindGlobal("ThreeCycleCandidatesNextIterator",
 function(iter)
@@ -52,14 +55,13 @@ function(iter)
         # elements, in G
         r,t,tPower,tPowerOld,c;
     if IsDoneIterator(iter) then return fail; fi;
-    # 2. + 3. Step
+    # 2. + 3. Step : construct an involution
     # check if we have tried enough three cycle candidates for the current involution t
     # if this is the case, we need to construct the next involution
     if iter!.t = fail or iter!.nrTriedConjugates >= iter!.C or iter!.nrThreeCycleCandidates >= iter!.T then
         r := PseudoRandom(iter!.G);
-        t := r^iter!.M;
         a := 0;
-        tPower := t;
+        tPower := r^iter!.M;
         # invariant: tPower = t ^ (2 ^ a)
         repeat
             a := a + 1;
