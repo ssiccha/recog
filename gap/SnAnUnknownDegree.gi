@@ -4,27 +4,14 @@
 # on the simple observation that the product of two involutions t1, t2, which
 # only move one common point, squares to a 3-cycle.
 #
-# Either returns a list of elements of G or NeverApplicable
-# TODO: Rewrite this to a kind of iterator function since each candidate is tested one by one
-BindGlobal("ThreeCycleCandidates",
-function(G, eps, N, groupIsOne, groupIsEq)
+# Returns a an iterator
+BindGlobal("ThreeCycleCandidatesIterator",
+    function(G, eps, N, groupIsOne, groupIsEq)
     local
-        # list, a set of three cycle candidates
-        threeCycleCandidates,
-        # list, a set of involutions
-        involutions,
         # integers, number of iterations
-        M,B,T,C,
+        M,B,T,C,logInt2N,
         # integer, prime, loop variable
-        p,
-        # integer, loop variable
-        i,a,
-        # elements, in G
-        r,t,tPower,tPowerOld,c,
-        # integer, max power we need to consider in 3. Step
-        maxPower,
-        # integer, loop variables in 4. Step
-        nrNewCandidates, nrIterations;
+        p;
     # 1. Step
     # TODO: better iteration over primes
     M := 1;
@@ -36,13 +23,43 @@ function(G, eps, N, groupIsOne, groupIsEq)
     B := Int(Ceil(13 * Log2(Float(N)) * Log2(3 / Float(eps))));
     T := Int(Ceil(3 * Log2(3 / Float(eps))));
     C := Int(Ceil(Float(3 * N * T / 5)));
+    logInt2N := LogInt(N, 2);
+
+    return IteratorByFunctions(rec(
+        IsDoneIterator := iter -> iter!.nrInvolutions >= iter!.B
+            and (iter!.nrTriedConjugates >= C or iter!.nrThreeCycleCandidates >= iter!.T),
+        NextIterator := ThreeCycleCandidatesNextIterator,
+        ShallowCopy := iter -> Error("We never need a copy of this iterator"),
+        M := M,
+        B := B,
+        T := T,
+        C := C,
+        logInt2N := logInt2N,
+        nrInvolutions := 0,
+        nrTriedConjugates := 0,
+        nrThreeCycleCandidates := 0,
+        t := fail,
+        G := G,
+        groupIsOne := groupIsOne,
+        groupIsEq := groupIsEq
+    ));
+end);
+# Either return an element of G or fail or NeverApplicable
+# TODO: take care of duplicate candidates?
+BindGlobal("ThreeCycleCandidatesNextIterator",
+function(iter)
+    local
+        # integer, loop variable
+        a,
+        # elements, in G
+        r,t,tPower,tPowerOld,c;
+    if IsDoneIterator(iter) then return fail; fi;
     # 2. + 3. Step
-    # construct involutions
-    involutions := [];
-    maxPower := LogInt(N, 2);
-    for i in [1 .. B] do
-        r := PseudoRandom(G);
-        t := r^M;
+    # check if we have tried enough three cycle candidates for the current involution t
+    # if this is the case, we need to construct the next involution
+    if iter!.t = fail or iter!.nrTriedConjugates >= iter!.C or iter!.nrThreeCycleCandidates >= iter!.T then
+        r := PseudoRandom(iter!.G);
+        t := r^iter!.M;
         a := 0;
         tPower := t;
         # invariant: tPower = t ^ (2 ^ a)
@@ -50,32 +67,26 @@ function(G, eps, N, groupIsOne, groupIsEq)
             a := a + 1;
             tPowerOld := tPower;
             tPower := tPower ^ 2;
-        until a = maxPower or groupIsOne(tPower);
-        if a = maxPower then
+        until a = iter!.logInt2N or iter!.groupIsOne(tPower);
+        if a = iter!.logInt2N then
             return NeverApplicable;
         fi;
-        Add(involutions, tPowerOld);
-    od;
+        iter!.t := tPowerOld;
+        iter!.nrInvolutions := iter!.nrInvolutions + 1;
+        iter!.nrTriedConjugates := 0;
+        iter!.nrThreeCycleCandidates := 0;
+    fi;
     # 4. + 5. Step
     # use the observation described in the comment above this function to
     # generate candidate for three-cycles from the involutions.
-    threeCycleCandidates := [];
-    for t in involutions do
-        nrNewCandidates := 0;
-        nrIterations := 0;
-        while nrIterations < C and nrNewCandidates < T do
-            c := t ^ PseudoRandom(G);
-            # TODO: form a set. Can we assume that group elements have an
-            # ordering and simply call Set? Benchmark this with groups that are
-            # so small that we possibly generate lots of the same elements.
-            if not groupIsEq(t * c, c * t) then
-                Add(threeCycleCandidates, (t * c) ^ 2);
-                nrNewCandidates := nrNewCandidates + 1;
-            fi;
-            nrIterations := nrIterations + 1;
-        od;
-    od;
-    return threeCycleCandidates;
+    iter!.nrTriedConjugates := iter!.nrTriedConjugates + 1;
+    c := iter!.t ^ PseudoRandom(iter!.G);
+    if not iter!.groupIsEq(iter!.t * c, c * iter!.t) then
+        iter!.nrThreeCycleCandidates := iter!.nrThreeCycleCandidates + 1;
+        return (iter!.t * c) ^ 2;
+    else
+        return fail;
+    fi;
 end);
 
 # G: the group to recognize
