@@ -9,11 +9,16 @@
 BindGlobal("ThreeCycleCandidatesIterator",
     function(G, eps, N, groupIsOne, groupIsEq)
     local
-        # integers, number of iterations
-        M,B,T,C,logInt2N,
+        # helper functions
+        tryThreeCycleCandidate, oneThreeCycleCandidate,
+        # integers, controlling the number of iterations
+        M, B, T, C, logInt2N,
         # integer, prime, loop variable
         p;
-    # 1. Step: Initialization
+    # Step 1: Initialization
+    # The current involution t_i
+    t := fail;
+
     # Constants
     # TODO: better iteration over primes
     M := 1;
@@ -26,19 +31,18 @@ BindGlobal("ThreeCycleCandidatesIterator",
     T := Int(Ceil(3 * Log2(3 / Float(eps))));
     C := Int(Ceil(Float(3 * N * T / 5)));
     logInt2N := LogInt(N, 2);
-    # The current involution
-    t := fail;
+
     # Counters
-    # We initialize nrTriedConjugates to C such that, ... FIXME flips
-    # immediately.
-    # counts the constructed involutions t_i in steps 2 and 3
+    # Counts the constructed involutions t_i in steps 2 & 3.
     nrInvolutions := 0;
-    # counts the elements c in step 4 that we use to conjugate the current
-    # involution t_i
+    # Counts the elements c in step 4 that we use to conjugate the current
+    # involution t_i.  We initialize nrTriedConjugates to C such that "steps 2
+    # & 3" in tryThreeCycleCandidate immediately construct an involution.
     nrTriedConjugates := C;
     # counts the size of the set Gamma_i in step 4 for the current involution
     # t_i
     nrThreeCycleCandidates := 0;
+
     # Helper functions
     # tryThreeCycleCandidate returns one of the following:
     # - a three cycle candidate, i.e. an element of G
@@ -50,7 +54,7 @@ BindGlobal("ThreeCycleCandidatesIterator",
             a,
             # elements, in G
             r, tPower, tPowerOld, c;
-        # 2. + 3. Step : New involution
+        # Steps 2 & 3: New involution
         # Check if we either tried enough conjugates or constructed enough
         # three cycle candidates for the current involution t.
         # If this is the case, we need to construct the next involution
@@ -72,7 +76,7 @@ BindGlobal("ThreeCycleCandidatesIterator",
             nrTriedConjugates := 0;
             nrThreeCycleCandidates := 0;
         fi;
-        # 4. + 5. Step : Three cycle candidate
+        # Steps 4 & 5: new three cycle candidate
         # Try to construct a three cycle candidate via a conjugate of t. See
         # the comment above this function.
         nrTriedConjugates := nrTriedConjugates + 1;
@@ -84,6 +88,10 @@ BindGlobal("ThreeCycleCandidatesIterator",
             return fail;
         fi;
     end;
+    # oneThreeCycleCandidate returns one of the following:
+    # - a three cycle candidate, i.e. an element of G
+    # - TemporaryFailure, if we exhausted all attempts
+    # - NeverApplicable, if we found out that G can't be an Sn or An
     oneThreeCycleCandidate := function()
         local candidate;
         repeat
