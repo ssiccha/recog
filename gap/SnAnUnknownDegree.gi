@@ -5,6 +5,7 @@
 # only move one common point, squares to a 3-cycle.
 #
 # Either returns a list of elements of G or NeverApplicable
+# TODO: Rewrite this to a kind of iterator function since each candidate is tested one by one
 BindGlobal("ThreeCycleCandidates",
 function(G, eps, N, groupIsOne, groupIsEq)
     local
@@ -131,31 +132,11 @@ function(g, c, r, groupIsOne, groupIsEq)
         cg, cg2, cg3, cg4,
         # temporary holder of H1, H2
         temp,
-        # sets of elements of G
-        H1, H2, XX,
-        # helper functions
-        constructH1, constructH2, isElmPassingTest;
-    # Helper functions
-    constructH1 := function(c, cg, cg3, cg4)
-        local H1;
-        H1 := ListWithIdenticalEntries(5,0);
-        H1[1] := c ^ 2;
-        H1[2] := c ^ cg;
-        H1[3] := H1[2] ^ cg3;
-        H1[4] := H1[3] ^ cg3;
-        H1[5] := H1[4] ^ cg4;
-        return H1;
-    end;
-    constructH2 := function(c, cg, cg3, cg4)
-        local H2;
-        H2 := ListWithIdenticalEntries(5,0);
-        H2[1] := c;
-        H2[2] := cg;
-        H2[3] := H2[2] ^ cg3;
-        H2[4] := H2[3] ^ cg3;
-        H2[5] := H2[4] ^ cg4;
-        return H2;
-    end;
+        # (sets of) elements of G
+        H1, H2, x1, x2, x3,
+        # helper function
+        isElmPassingTest;
+    # Helper function
     isElmPassingTest := function(x, H, groupIsOne)
         local nrTrivialComm, h;
         nrTrivialComm := 0;
@@ -173,22 +154,21 @@ function(g, c, r, groupIsOne, groupIsEq)
     cg2 := cg ^ g;
     cg3 := cg2 ^ g;
     cg4 := cg3 ^ g;
-    H1 := constructH1(c, cg, cg3, cg4);
+    H1 := [ c ^ 2, c ^ cg, ~[2] ^ cg3, ~[3] ^ cg3, ~[4] ^ cg4 ];
     # Test whether an elm of the set X, here called XX, commutes with at least
     # two elements of H1.
-    XX := ListWithIdenticalEntries(3, 0);
-    XX[1] := c ^ r;
-    if not isElmPassingTest(XX[1], H1, groupIsOne) then return false; fi;
-    XX[2] := cg2 ^ r;
-    if not isElmPassingTest(XX[2], H1, groupIsOne) then return false; fi;
-    XX[3] := ((cg2 ^ cg3) ^ cg4) ^ r;
-    if not isElmPassingTest(XX[3], H1, groupIsOne) then return false; fi;
+    x1 := c ^ r;
+    if not isElmPassingTest(x1, H1, groupIsOne) then return false; fi;
+    x2 := cg2 ^ r;
+    if not isElmPassingTest(x2, H1, groupIsOne) then return false; fi;
+    x3 := ((cg2 ^ cg3) ^ cg4) ^ r;
+    if not isElmPassingTest(x3, H1, groupIsOne) then return false; fi;
     # Test whether an elm of the set X, here called XX, commutes with at least
     # two elements of H2.
-    H2 := constructH2(c, cg, cg3, cg4);
-    if not isElmPassingTest(XX[1], H2, groupIsOne) then return false; fi;
-    if not isElmPassingTest(XX[2], H2, groupIsOne) then return false; fi;
-    if not isElmPassingTest(XX[3], H2, groupIsOne) then return false; fi;
+    H2 := [c, cg, ~[2] ^ cg3, ~[3] ^ cg3, ~[4] ^ cg4];
+    if not isElmPassingTest(x1, H2, groupIsOne) then return false; fi;
+    if not isElmPassingTest(x2, H2, groupIsOne) then return false; fi;
+    if not isElmPassingTest(x3, H2, groupIsOne) then return false; fi;
     return true;
 end);
 
@@ -217,7 +197,7 @@ function(g, c, r, k, groupIsOne, groupIsEq)
         t,
         # conjugating element
         x;
-    F := ListWithIdenticalEntries(4,false);
+    F := [false, false, false, false];
     f1 := fail;
     f2 := fail;
     m := fail;
