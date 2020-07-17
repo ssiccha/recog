@@ -110,6 +110,7 @@ BindGlobal("ThreeCycleCandidatesIterator",
                 return NeverApplicable;
             fi;
         until candidate <> fail;
+        return candidate;
     end;
     return oneThreeCycleCandidate;
 end);
