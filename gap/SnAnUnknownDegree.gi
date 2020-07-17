@@ -7,12 +7,15 @@
 # Returns a an iterator
 BindGlobal("ThreeCycleCandidatesIterator",
     function(G, eps, N, groupIsOne, groupIsEq)
+    # The local variables are explained in more detail in
+    # ThreeCycleCandidatesNextIterator
     local
         # integers, number of iterations
         M,B,T,C,logInt2N,
         # integer, prime, loop variable
         p;
-    # 1. Step
+    # 1. Step: Initialization
+    # Constants
     # TODO: better iteration over primes
     M := 1;
     p := 3;
@@ -24,26 +27,21 @@ BindGlobal("ThreeCycleCandidatesIterator",
     T := Int(Ceil(3 * Log2(3 / Float(eps))));
     C := Int(Ceil(Float(3 * N * T / 5)));
     logInt2N := LogInt(N, 2);
-
-    return IteratorByFunctions(rec(
-        IsDoneIterator := iter -> iter!.nrInvolutions >= iter!.B
-            and (iter!.nrTriedConjugates >= C or iter!.nrThreeCycleCandidates >= iter!.T),
-        NextIterator := ThreeCycleCandidatesNextIterator,
-        ShallowCopy := iter -> Error("We never need a copy of this iterator"),
-        M := M,
-        B := B,
-        T := T,
-        C := C,
-        logInt2N := logInt2N,
-        nrInvolutions := 0,
-        nrTriedConjugates := 0,
-        nrThreeCycleCandidates := 0,
-        t := fail,
-        G := G,
-        groupIsOne := groupIsOne,
-        groupIsEq := groupIsEq
-    ));
+    # Counters
+    # We initialize nrTriedConjugates to C such that, ... FIXME flips
+    # immediately
+    nrThreeCycleCandidates := 0,
+    nrTriedConjugates := C,
+    nrInvolutions := 0,
+    return ThreeCycleCandidatesNextIterator();
+    # FIXME move into ThreeCycleCandidatesNextIterator. If Iteration is
+    # finished return fail. Then the main loop can return until `t ==
+    # fail`.
+    iter!.nrInvolutions >= iter!.B
+        and (iter!.nrTriedConjugates >= C
+            or iter!.nrThreeCycleCandidates >= iter!.T);
 end);
+
 # Either return an element of G or fail or NeverApplicable
 # TODO: take care of duplicate candidates?
 BindGlobal("ThreeCycleCandidatesNextIterator",
