@@ -42,14 +42,14 @@ BindGlobal("ThreeCycleCandidatesIterator",
     # Helper functions
     # tryThreeCycleCandidate returns one of the following:
     # - a three cycle candidate, i.e. an element of G
-    # - fail, if the random conjugate from step 4 and t commute
-    # - NeverApplicable, if k
+    # - fail, if the random conjugate c from step 4 and t commute
+    # - NeverApplicable, if G can not be an Sn or An
     tryThreeCycleCandidate := function()
         local
             # integer, loop variable
             a,
             # elements, in G
-            r,tPower,tPowerOld,c;
+            r, tPower, tPowerOld, c;
         # 2. + 3. Step : New involution
         # Check if we either tried enough conjugates or constructed enough
         # three cycle candidates for the current involution t.
@@ -85,17 +85,21 @@ BindGlobal("ThreeCycleCandidatesIterator",
         fi;
     end;
     oneThreeCycleCandidate := function()
-        if nrInvolutions >= B
-            and (nrTriedConjugates >= C or nrThreeCycleCandidates >= T)
-        then
-            # We are done
-            return false;
-        fi;
-        candidate := fail;
+        local candidate;
         repeat
+            if nrInvolutions >= B
+                and (nrTriedConjugates >= C or nrThreeCycleCandidates >= T)
+            then
+                # We are done and were not able to recognize Sn or An.
+                return TemporaryFailure;
+            fi;
             candidate := tryThreeCycleCandidate();
+            if candidate = NeverApplicable then
+                return NeverApplicable;
+            fi;
         until candidate <> fail;
     end;
+    return oneThreeCycleCandidate;
 end);
 
 # G: the group to recognize
