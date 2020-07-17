@@ -165,7 +165,7 @@ function(g, c, r, groupIsOne, groupIsEq)
     cg3 := cg2 ^ g;
     cg4 := cg3 ^ g;
     H1 := [ c ^ 2, c ^ cg, ~[2] ^ cg3, ~[3] ^ cg3, ~[4] ^ cg4 ];
-    # Test whether an elm of the set X, here called XX, commutes with at least
+    # Test whether an elm of the set X commutes with at least
     # two elements of H1.
     x1 := c ^ r;
     if not isElmPassingTest(x1, H1, groupIsOne) then return false; fi;
@@ -173,7 +173,7 @@ function(g, c, r, groupIsOne, groupIsEq)
     if not isElmPassingTest(x2, H1, groupIsOne) then return false; fi;
     x3 := ((cg2 ^ cg3) ^ cg4) ^ r;
     if not isElmPassingTest(x3, H1, groupIsOne) then return false; fi;
-    # Test whether an elm of the set X, here called XX, commutes with at least
+    # Test whether an elm of the set X commutes with at least
     # two elements of H2.
     H2 := [c, cg, ~[2] ^ cg3, ~[3] ^ cg3, ~[4] ^ cg4];
     if not isElmPassingTest(x1, H2, groupIsOne) then return false; fi;
