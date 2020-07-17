@@ -30,64 +30,62 @@ BindGlobal("ThreeCycleCandidatesIterator",
     # Counters
     # We initialize nrTriedConjugates to C such that, ... FIXME flips
     # immediately
-    nrThreeCycleCandidates := 0,
-    nrTriedConjugates := C,
-    nrInvolutions := 0,
-    return ThreeCycleCandidatesNextIterator();
-    # FIXME move into ThreeCycleCandidatesNextIterator. If Iteration is
-    # finished return fail. Then the main loop can return until `t ==
-    # fail`.
-    iter!.nrInvolutions >= iter!.B
-        and (iter!.nrTriedConjugates >= C
-            or iter!.nrThreeCycleCandidates >= iter!.T);
-end);
-
-# Either return an element of G or fail or NeverApplicable
-# nrInvolutions counts the constructed involutions t_i in 2. + 3. Step
-# nrTriedConjugates counts the elements c in 4. Step that we use to conjugate the current involution t_i
-# nrThreeCycleCandidates counts the size of the set Gamma_i in 4. Step for the current involution t_i
-# TODO: take care of duplicate candidates?
-BindGlobal("ThreeCycleCandidatesNextIterator",
-function(iter)
-    local
-        # integer, loop variable
-        a,
-        # elements, in G
-        r,t,tPower,tPowerOld,c;
-    if IsDoneIterator(iter) then return fail; fi;
-    # 2. + 3. Step : Involution
-    # Check if we either tried enough conjugates or
-    # constructed enough three cycle candidates for the current involution t.
-    # If this is the case, we need to construct the next involution
-    if iter!.t = fail or iter!.nrTriedConjugates >= iter!.C or iter!.nrThreeCycleCandidates >= iter!.T then
-        r := PseudoRandom(iter!.G);
-        a := 0;
-        tPower := r^iter!.M;
-        # Invariant: tPower = (r ^ M) ^ (2 ^ a)
-        repeat
-            a := a + 1;
-            tPowerOld := tPower;
-            tPower := tPower ^ 2;
-        until a = iter!.logInt2N or iter!.groupIsOne(tPower);
-        if a = iter!.logInt2N then
-            return NeverApplicable;
+    nrThreeCycleCandidates := 0;
+    nrTriedConjugates := C;
+    nrInvolutions := 0;
+    t := fail;
+    # Either return an element of G or fail or NeverApplicable
+    # nrInvolutions counts the constructed involutions t_i in 2. + 3. Step
+    # nrTriedConjugates counts the elements c in 4. Step that we use to conjugate the current involution t_i
+    # nrThreeCycleCandidates counts the size of the set Gamma_i in 4. Step for the current involution t_i
+    # TODO: take care of duplicate candidates?
+    return (
+        function()
+        local
+            # integer, loop variable
+            a,
+            # elements, in G
+            r,tPower,tPowerOld,c;
+        if nrInvolutions >= B
+            and (nrTriedConjugates >= C or nrThreeCycleCandidates >= T)
+        then
+            # FIXME return finished
+            return fail;
         fi;
-        iter!.t := tPowerOld;
-        iter!.nrInvolutions := iter!.nrInvolutions + 1;
-        iter!.nrTriedConjugates := 0;
-        iter!.nrThreeCycleCandidates := 0;
-    fi;
-    # 4. + 5. Step : Three Cycle Candidate
-    # Try to construct a three cycle candidate via a conjugate of t by
-    # using the observation described in the comment above this function.
-    iter!.nrTriedConjugates := iter!.nrTriedConjugates + 1;
-    c := iter!.t ^ PseudoRandom(iter!.G);
-    if not iter!.groupIsEq(iter!.t * c, c * iter!.t) then
-        iter!.nrThreeCycleCandidates := iter!.nrThreeCycleCandidates + 1;
-        return (iter!.t * c) ^ 2;
-    else
-        return fail;
-    fi;
+        # 2. + 3. Step : Involution
+        # Check if we either tried enough conjugates or
+        # constructed enough three cycle candidates for the current involution t.
+        # If this is the case, we need to construct the next involution
+        if nrTriedConjugates >= C or nrThreeCycleCandidates >= T then
+            r := PseudoRandom(G);
+            a := 0;
+            tPower := r ^ M;
+            # Invariant: tPower = (r ^ M) ^ (2 ^ a)
+            repeat
+                a := a + 1;
+                tPowerOld := tPower;
+                tPower := tPower ^ 2;
+            until a = logInt2N or groupIsOne(tPower);
+            if a = logInt2N then
+                return NeverApplicable;
+            fi;
+            t := tPowerOld;
+            nrInvolutions := nrInvolutions + 1;
+            nrTriedConjugates := 0;
+            nrThreeCycleCandidates := 0;
+        fi;
+        # 4. + 5. Step : Three Cycle Candidate
+        # Try to construct a three cycle candidate via a conjugate of t by
+        # using the observation described in the comment above this function.
+        nrTriedConjugates := nrTriedConjugates + 1;
+        c := t ^ PseudoRandom(G);
+        if not groupIsEq(t * c, c * t) then
+            nrThreeCycleCandidates := nrThreeCycleCandidates + 1;
+            return (t * c) ^ 2;
+        else
+            return fail;
+        fi;
+    end);
 end);
 
 # G: the group to recognize
