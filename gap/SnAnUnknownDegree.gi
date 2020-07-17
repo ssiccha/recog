@@ -5,10 +5,9 @@
 # only move one common point, squares to a 3-cycle.
 #
 # Returns a an iterator
+# TODO: take care of duplicate candidates?
 BindGlobal("ThreeCycleCandidatesIterator",
     function(G, eps, N, groupIsOne, groupIsEq)
-    # The local variables are explained in more detail in
-    # ThreeCycleCandidatesNextIterator
     local
         # integers, number of iterations
         M,B,T,C,logInt2N,
@@ -27,34 +26,33 @@ BindGlobal("ThreeCycleCandidatesIterator",
     T := Int(Ceil(3 * Log2(3 / Float(eps))));
     C := Int(Ceil(Float(3 * N * T / 5)));
     logInt2N := LogInt(N, 2);
+    # The current involution
+    t := fail;
     # Counters
     # We initialize nrTriedConjugates to C such that, ... FIXME flips
-    # immediately
-    nrThreeCycleCandidates := 0;
-    nrTriedConjugates := C;
+    # immediately.
+    # counts the constructed involutions t_i in steps 2 and 3
     nrInvolutions := 0;
-    t := fail;
-    # Either return an element of G or fail or NeverApplicable
-    # nrInvolutions counts the constructed involutions t_i in 2. + 3. Step
-    # nrTriedConjugates counts the elements c in 4. Step that we use to conjugate the current involution t_i
-    # nrThreeCycleCandidates counts the size of the set Gamma_i in 4. Step for the current involution t_i
-    # TODO: take care of duplicate candidates?
-    return (
-        function()
+    # counts the elements c in step 4 that we use to conjugate the current
+    # involution t_i
+    nrTriedConjugates := C;
+    # counts the size of the set Gamma_i in step 4 for the current involution
+    # t_i
+    nrThreeCycleCandidates := 0;
+    # Helper functions
+    # tryThreeCycleCandidate returns one of the following:
+    # - a three cycle candidate, i.e. an element of G
+    # - fail, if the random conjugate from step 4 and t commute
+    # - NeverApplicable, if k
+    tryThreeCycleCandidate := function()
         local
             # integer, loop variable
             a,
             # elements, in G
             r,tPower,tPowerOld,c;
-        if nrInvolutions >= B
-            and (nrTriedConjugates >= C or nrThreeCycleCandidates >= T)
-        then
-            # FIXME return finished
-            return fail;
-        fi;
-        # 2. + 3. Step : Involution
-        # Check if we either tried enough conjugates or
-        # constructed enough three cycle candidates for the current involution t.
+        # 2. + 3. Step : New involution
+        # Check if we either tried enough conjugates or constructed enough
+        # three cycle candidates for the current involution t.
         # If this is the case, we need to construct the next involution
         if nrTriedConjugates >= C or nrThreeCycleCandidates >= T then
             r := PseudoRandom(G);
@@ -74,9 +72,9 @@ BindGlobal("ThreeCycleCandidatesIterator",
             nrTriedConjugates := 0;
             nrThreeCycleCandidates := 0;
         fi;
-        # 4. + 5. Step : Three Cycle Candidate
-        # Try to construct a three cycle candidate via a conjugate of t by
-        # using the observation described in the comment above this function.
+        # 4. + 5. Step : Three cycle candidate
+        # Try to construct a three cycle candidate via a conjugate of t. See
+        # the comment above this function.
         nrTriedConjugates := nrTriedConjugates + 1;
         c := t ^ PseudoRandom(G);
         if not groupIsEq(t * c, c * t) then
@@ -85,7 +83,19 @@ BindGlobal("ThreeCycleCandidatesIterator",
         else
             return fail;
         fi;
-    end);
+    end;
+    oneThreeCycleCandidate := function()
+        if nrInvolutions >= B
+            and (nrTriedConjugates >= C or nrThreeCycleCandidates >= T)
+        then
+            # We are done
+            return false;
+        fi;
+        candidate := fail;
+        repeat
+            candidate := tryThreeCycleCandidate();
+        until candidate <> fail;
+    end;
 end);
 
 # G: the group to recognize
