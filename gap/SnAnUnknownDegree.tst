@@ -1,6 +1,6 @@
-#@local testFunction, permToPermMat, degreesToTest, isos;
-#@local nonIsomorphicGroups;
-#@local g, c, r, i;
+#@local testFunction, permToPermMat, degreesToTest, isos
+#@local nonIsomorphicGroups
+#@local g, c, r, i
 #
 # testing matrix:
 # - isomorphic: yes, no
