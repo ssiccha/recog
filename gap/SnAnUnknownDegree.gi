@@ -223,32 +223,36 @@ BindGlobal("AdjustCycle",
 function(ri, g, c, r, k)
     local
         # list of 4 booleans, is point j fixed point
-        F,
+        F4,
         # smallest fixed point
         f1,
         # second smallest fixed point
         f2,
         # smallest non-fixed point
         m,
+        # bool, false if |F| < 2 or |F| = k
+        success,
         # integer, loop variable over [1 .. k]
         j,
         # element of G, loop variable
         t,
         # conjugating element
         x;
-    F := [false, false, false, false];
+    # We do not store the set F explicitely, but instead
+    # F4 that is the intersection of F and {1,2,3,4}
+    F4 := [false, false, false, false];
     f1 := fail;
     f2 := fail;
     m := fail;
     j := 0;
     t := c ^ (g ^ -3);
     # invariant: t = c ^ (g ^ (j - 3))
-    repeat
+    for j in [1 .. k] do
         j := j + 1;
         t := t ^ g;
         if IsFixedPoint(ri, g, t, r) then
             if j <= 4 then
-                F[j] := true;
+                F4[j] := true;
             fi;
             if f1 = fail then
                 f1 := j;
@@ -258,23 +262,30 @@ function(ri, g, c, r, k)
         elif m = fail then
             m := j;
         fi;
-    until j >= k or (j >= 4 and f1 <> fail and f2 <> fail and m <> fail);
-    if f1 = fail or f2 = fail or m =fail then
+        # f1 and f2 being defined is equivalent to |F| >= 2
+        # m being defined is equivalent to |F| < k
+        success := f1 <> fail and f2 <> fail and m <> fail;
+        if success then
+            if j >= 4 then
+                break;
+            # 2. Case, we do not need to compute F4[4]
+            elif f1 = 1 and f2 = 2 and m = 3 then
+                return r;
+            fi;
+        fi;
+    od;
+    if not success then
         return fail;
     fi;
     # case distinction on F as in the table of Algorithm 4.20
-    if F[1] then
-        if F[2] then
-            if F[3] then
-                # 1. Case
-                x := c ^ ((g * c ^ 2) ^ (m - 3) * c) * c;
-            else
-                # 2. Case
-                x := One(c);
-            fi;
+    # via a decision tree
+    if F4[1] then
+        if F4[2] then
+            # 1. Case, since 2. Case is handled in the for loop
+            x := c ^ ((g * c ^ 2) ^ (m - 3) * c) * c;
         else
-            if F[3] then
-                if F[4] then
+            if F4[3] then
+                if F4[4] then
                     # 3. Case
                     x := c ^ g;
                 else
@@ -287,12 +298,12 @@ function(ri, g, c, r, k)
             fi;
         fi;
     else
-        if F[2] then
-            if F[4] then
+        if F4[2] then
+            if F4[4] then
                 # 6. Case
                 x := c ^ (c ^ g);
             else
-                if F[3] then
+                if F4[3] then
                     # 7. Case
                     x := (c ^ 2) ^ (c ^ g);
                 else
@@ -301,7 +312,7 @@ function(ri, g, c, r, k)
                 fi;
             fi;
         else
-            if F[3] then
+            if F4[3] then
                 # 9. Case
                 x := (c ^ 2) ^ ((g * c ^ 2) ^ (f2 - 3)) * c ^ 2;
             else
