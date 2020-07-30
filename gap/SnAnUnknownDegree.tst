@@ -1,6 +1,6 @@
 #@local testFunction, degrees
 #@local altGroups, symGroups, permMatGroup, altMatGroups, nonAltOrSymGroups
-#@local g, c, r, i
+#@local ri, g, c, r, i
 #
 # testing matrix:
 # - isomorphic: yes, no
@@ -14,15 +14,16 @@
 # TODO: better name for testFunction
 # tests ThreeCycleCandidatesIterator and BolsteringElements
 gap> testFunction := function(G, eps, N)
->     local iterator, candidate, i, j;
->     iterator := ThreeCycleCandidatesIterator(G, eps, N, IsOne, EQ);
+>     local ri, iterator, candidate, i, j;
+>     ri := EmptyRecognitionInfoRecord(rec(), G, false);
+>     iterator := ThreeCycleCandidatesIterator(ri, eps, N);
 >     for i in [1 .. 10] do
 >         candidate := iterator();
 >         for j in [1 .. 10] do
 >             if candidate <> NeverApplicable
 >                     and candidate <> TemporaryFailure then
->                 BolsteringElements(G, candidate, eps,
->                                    N, IsOne, EQ);
+>                 BolsteringElements(ri, candidate, eps,
+>                                    N);
 >             fi;
 >         od;
 >     od;
@@ -69,18 +70,19 @@ gap> for i in [1 .. Length(nonAltOrSymGroups)] do
 > od;
 
 # IsFixedPoint
+gap> ri := EmptyRecognitionInfoRecord(rec(), SymmetricGroup(10), false);;
 gap> g := (1,2,3,4,5,6,7,8);;
 gap> c := (1,2,3);;
 gap> r := (1,2)(4,5,6);;
-gap> IsFixedPoint(g,c,r,IsOne,EQ);
+gap> IsFixedPoint(ri, g,c,r);
 true
 gap> r := (2,3,4);;
-gap> IsFixedPoint(g,c,r,IsOne,EQ);
+gap> IsFixedPoint(ri, g,c,r);
 false
 
 # AdjustCycle
 gap> g := (1,2,3,4,5,6,7,8);;
 gap> c := (1,2,3);;
 gap> r := (1,2,3)(5,6);;
-gap> AdjustCycle(g, c, r, 8, IsOne, EQ);
+gap> AdjustCycle(ri, g, c, r, 8);
 (3,4,7)(5,6)
