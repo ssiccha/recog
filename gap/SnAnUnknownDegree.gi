@@ -323,3 +323,23 @@ function(ri, g, c, r, k)
     fi;
     return r^x;
 end);
+
+BindGlobal("AppendPoints",
+function(ri, g, c, r, s, k, k0)
+    local gc2, x, j;
+    gc2 := g * c ^ 2;
+    x := c;
+    # Invariant: x = c ^ (r ^ j)
+    for j in [1 .. k0] do
+        x := x ^ r;
+        if isone(ri)(Comm(x, gc2)) then
+            if isone(ri)(s) then
+                return [g, x, k];
+            elif not isequal(ri)(s, x) then
+                return [g * s ^ (x ^ 2), k + 2, One(s)];
+            else
+                return [g, s, k];
+            fi;
+        fi;
+    od;
+end);
