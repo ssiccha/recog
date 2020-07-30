@@ -4,8 +4,12 @@
 # on the simple observation that the product of two involutions t1, t2, which
 # only move one common point, squares to a 3-cycle.
 #
-# Returns a an iterator
 # TODO: take care of duplicate candidates?
+# Creates and returns a function, here called oneThreeCycleCandidate. The
+# function oneThreeCycleCandidate returns one of the following:
+# - a three cycle candidate, i.e. an element of G
+# - TemporaryFailure, if we exhausted all attempts
+# - NeverApplicable, if we found out that G can't be an Sn or An
 BindGlobal("ThreeCycleCandidatesIterator",
     function(G, eps, N, groupIsOne, groupIsEq)
     local
@@ -92,10 +96,7 @@ BindGlobal("ThreeCycleCandidatesIterator",
             return fail;
         fi;
     end;
-    # oneThreeCycleCandidate returns one of the following:
-    # - a three cycle candidate, i.e. an element of G
-    # - TemporaryFailure, if we exhausted all attempts
-    # - NeverApplicable, if we found out that G can't be an Sn or An
+    # construct the iterator
     oneThreeCycleCandidate := function()
         local candidate;
         repeat
