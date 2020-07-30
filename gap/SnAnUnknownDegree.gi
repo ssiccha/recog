@@ -11,7 +11,7 @@
 # - TemporaryFailure, if we exhausted all attempts
 # - NeverApplicable, if we found out that G can't be an Sn or An
 BindGlobal("ThreeCycleCandidatesIterator",
-    function(G, eps, N, groupIsOne, groupIsEq)
+    function(ri, eps, N)
     local
         # involution
         t,
@@ -35,6 +35,7 @@ BindGlobal("ThreeCycleCandidatesIterator",
         M := M * p ^ LogInt(N, p);
         p := NextPrimeInt(p);
     od;
+    # FIXME: Probably B can be chosen smaller
     B := Int(Ceil(13 * Log2(Float(N)) * Log2(3 / Float(eps))));
     T := Int(Ceil(3 * Log2(3 / Float(eps))));
     C := Int(Ceil(Float(3 * N * T / 5)));
@@ -67,7 +68,7 @@ BindGlobal("ThreeCycleCandidatesIterator",
         # three cycle candidates for the current involution t.
         # If this is the case, we need to construct the next involution
         if nrTriedConjugates >= C or nrThreeCycleCandidates >= T then
-            r := PseudoRandom(G);
+            r := RandomElm(ri,"simplesocle",true)!.el;
             a := 0;
             tPower := r ^ M;
             # Invariant: tPower = (r ^ M) ^ (2 ^ a)
@@ -75,7 +76,7 @@ BindGlobal("ThreeCycleCandidatesIterator",
                 a := a + 1;
                 tPowerOld := tPower;
                 tPower := tPower ^ 2;
-            until a = logInt2N or groupIsOne(tPower);
+            until a = logInt2N or isone(ri)(tPower);
             if a = logInt2N then
                 return NeverApplicable;
             fi;
@@ -88,8 +89,8 @@ BindGlobal("ThreeCycleCandidatesIterator",
         # Try to construct a three cycle candidate via a conjugate of t. See
         # the comment above this function.
         nrTriedConjugates := nrTriedConjugates + 1;
-        c := t ^ PseudoRandom(G);
-        if not groupIsEq(t * c, c * t) then
+        c := t ^ RandomElm(ri,"simplesocle",true)!.el;
+        if not isequal(ri)(t * c, c * t) then
             nrThreeCycleCandidates := nrThreeCycleCandidates + 1;
             return (t * c) ^ 2;
         else
@@ -122,7 +123,7 @@ end);
 # symmetric group and c is a 3-cycle, then this function returns a list of
 # bolstering elements with respect to c.
 BindGlobal("BolsteringElements",
-function(G, c, eps, N, groupIsOne, groupIsEq)
+function(ri, c, eps, N)
     local result, R, S, prebolsteringElms, i, r, cr, cr2;
     result := [];
     R := Int(Ceil(7 / 4 * Log2(Float(eps ^ -1))));
@@ -131,14 +132,14 @@ function(G, c, eps, N, groupIsOne, groupIsEq)
     i := 0;
     # find pre-bolstering elements
     while i <= S and Length(prebolsteringElms) <= R do
-        r := PseudoRandom(G);
+        r := RandomElm(ri,"simplesocle",true)!.el;
         # test whether r is pre-bolstering
         cr := c ^ r;
         cr2 := c ^ (r ^ 2);
-        if not groupIsOne(Comm(cr, c))
-                and not groupIsEq(cr2, c)
-                and not groupIsEq(cr2, c ^ 2)
-                and groupIsOne(Comm(cr2, c))
+        if not isone(ri)(Comm(cr, c))
+                and not isequal(ri)(cr2, c)
+                and not isequal(ri)(cr2, c ^ 2)
+                and isone(ri)(Comm(cr2, c))
         then
             Add(prebolsteringElms, r);
         fi;
@@ -146,7 +147,7 @@ function(G, c, eps, N, groupIsOne, groupIsEq)
     od;
     # construct bolstering elements
     for r in prebolsteringElms do
-        if groupIsOne((c ^ (r * c * r)
+        if isone(ri)((c ^ (r * c * r)
                       * c ^ (r * c ^ (r ^ 2) * c)) ^ 3)
         then
             Add(result, c ^ 2 * r);
@@ -164,7 +165,7 @@ end);
 # Let phi be an isomorphism from G to a natural alternating or symmetric group.
 # This function decides whether alpha is a fixed point of phi(r).
 BindGlobal("IsFixedPoint",
-function(g, c, r, groupIsOne, groupIsEq)
+function(ri, g, c, r)
     local
         # respectively c ^ (g ^ i)
         cg, cg2, cg3, cg4,
@@ -175,11 +176,11 @@ function(g, c, r, groupIsOne, groupIsEq)
         # helper function
         isElmPassingTest;
     # Helper function
-    isElmPassingTest := function(x, H, groupIsOne)
+    isElmPassingTest := function(ri, x, H)
         local nrTrivialComm, h;
         nrTrivialComm := 0;
         for h in H do
-            if groupIsOne(Comm(x, h)) then
+            if isone(ri)(Comm(x, h)) then
                 nrTrivialComm := nrTrivialComm + 1;
             fi;
             if nrTrivialComm >= 2 then
@@ -196,17 +197,17 @@ function(g, c, r, groupIsOne, groupIsEq)
     # Test whether an elm of the set X commutes with at least
     # two elements of H1.
     x1 := c ^ r;
-    if not isElmPassingTest(x1, H1, groupIsOne) then return false; fi;
+    if not isElmPassingTest(ri, x1, H1) then return false; fi;
     x2 := cg2 ^ r;
-    if not isElmPassingTest(x2, H1, groupIsOne) then return false; fi;
+    if not isElmPassingTest(ri, x2, H1) then return false; fi;
     x3 := ((cg2 ^ cg3) ^ cg4) ^ r;
-    if not isElmPassingTest(x3, H1, groupIsOne) then return false; fi;
+    if not isElmPassingTest(ri, x3, H1) then return false; fi;
     # Test whether an elm of the set X commutes with at least
     # two elements of H2.
     H2 := [c, cg, ~[2] ^ cg3, ~[3] ^ cg3, ~[4] ^ cg4];
-    if not isElmPassingTest(x1, H2, groupIsOne) then return false; fi;
-    if not isElmPassingTest(x2, H2, groupIsOne) then return false; fi;
-    if not isElmPassingTest(x3, H2, groupIsOne) then return false; fi;
+    if not isElmPassingTest(ri, x1, H2) then return false; fi;
+    if not isElmPassingTest(ri, x2, H2) then return false; fi;
+    if not isElmPassingTest(ri, x3, H2) then return false; fi;
     return true;
 end);
 
@@ -219,7 +220,7 @@ end);
 # then the algorithm returns a conjugate r^x such that r fixes the points 1, 2
 # but not the point 3.
 BindGlobal("AdjustCycle",
-function(g, c, r, k, groupIsOne, groupIsEq)
+function(ri, g, c, r, k)
     local
         # list of 4 booleans, is point j fixed point
         F,
@@ -245,7 +246,7 @@ function(g, c, r, k, groupIsOne, groupIsEq)
     repeat
         j := j + 1;
         t := t ^ g;
-        if IsFixedPoint(g, t, r, groupIsOne, groupIsEq) then
+        if IsFixedPoint(ri, g, t, r) then
             if j <= 4 then
                 F[j] := true;
             fi;
