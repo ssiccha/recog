@@ -1,5 +1,5 @@
-#@local testFunction, degreesToTest, permToPermMat, isos
-#@local altAndSymGroups, nonAltOrSymGroups
+#@local testFunction, degrees
+#@local altGroups, symGroups, permMatGroup, altMatGroups, nonAltOrSymGroups
 #@local g, c, r, i
 #
 # testing matrix:
@@ -11,51 +11,61 @@
 # - projective matrix groups
 #
 # TODO: Use RECOG.TestGroup?
+# TODO: better name for testFunction
+# tests ThreeCycleCandidatesIterator and BolsteringElements
 gap> testFunction := function(G, eps, N)
->     local C, i;
+>     local iterator, candidate, i, j;
 >     iterator := ThreeCycleCandidatesIterator(G, eps, N, IsOne, EQ);
->     candidate := iterator();
->     if candidate <> NeverApplicable then
->         for i in [1 .. 10] do
->             BolsteringElements(G, PseudoRandom(C), eps, N, IsOne, EQ);
+>     for i in [1 .. 10] do
+>         candidate := iterator();
+>         for j in [1 .. 10] do
+>             if candidate <> NeverApplicable
+>                     and candidate <> TemporaryFailure then
+>                 BolsteringElements(G, candidate, eps,
+>                                    N, IsOne, EQ);
+>             fi;
 >         od;
->     fi;
+>     od;
 > end;;
-gap> degreesToTest := Concatenation(
->     [10, 11, 12, 20, 21, 30, 31, 40, 41, 50, 51],
+gap> degrees := Concatenation(
+>     [10, 12, 20, 21, 30, 35, 40, 42, 50, 51],
 >     Primes{[5 .. 15]}
 > );;
+gap> degrees := degrees{[1, 2, 11, 12]};;
+
 # TODO: more non-isomorphic examples
-gap> altAndSymGroups := Concatenation(
->     List(degrees, AlternatingGroup),
->     List(degrees, SymmetricGroup));;
-gap> permToPermMat :=
->   {x, deg, field}
->   ->
->   ImmutableMatrix(field, PermutationMat(x, deg, field));;
-# TODO: add a projective group
+# TODO: add projective groups
+gap> altGroups := List(degrees, AlternatingGroup);;
+gap> symGroups := List(degrees, SymmetricGroup);;
+gap> permMatGroup := G -> Group(List(
+>     GeneratorsOfGroup(G),
+>     x -> ImmutableMatrix(7, PermutationMat(x, NrMovedPoints(G), GF(7)))
+> ));;
+gap> altMatGroups := List([10],
+>                          n -> permMatGroup(AlternatingGroup(n)));;
 gap> nonAltOrSymGroups := [
->     DihedralGroup(IsPermGroup,10),
+>     DihedralGroup(IsPermGroup, 10),
 >     DihedralGroup(IsPcGroup, 10),
->     DihedralGroup(IsPermGroup, 2000),
->     DihedralGroup(IsPcGroup, 2000),
->     SL(3,5),
+>     #DihedralGroup(IsPermGroup, 2000),
+>     #DihedralGroup(IsPcGroup, 2000),
+>     #PSL(3, 5),
+>     SL(3, 5),
+>     #permMatGroup(DihedralGroup(IsPermGroup, 10)),
+>     #Omega(-1, 4, 5),
+>     #Omega(+1, 4, 5),
+>     #Omega(0, 5, 5),
 > ];;
-gap> # TODO: use permToPermMat with varying degrees and fields
 
 # ThreeCycleCandidates
-gap> for i in [1 .. Length(testGroups)] do
->     ThreeCycleCandidatesIterator(testGroups[i],
->                                  1/100,
->                                  degrees[i],
->                                  IsOne,
->                                  EQ);
+gap> for i in [1 .. Length(degrees)] do
+>     testFunction(altGroups[i], 1/100, degrees[i]);
+>     testFunction(symGroups[i], 1/100, degrees[i]);
 > od;
-
-# BolsteringElements
-gap> for i in [1 .. Length(testGroups)] do
->     G := testGroups[i];
->     BolsteringElements(G, PseudoRandom(G), 1/100, degrees[i], IsOne, EQ);
+gap> for i in [1 .. Length(altMatGroups)] do
+>     testFunction(altMatGroups[i], 1/100, 13);
+> od;
+gap> for i in [1 .. Length(nonAltOrSymGroups)] do
+>     testFunction(nonAltOrSymGroups[i], 1/100, 15);
 > od;
 
 # IsFixedPoint
