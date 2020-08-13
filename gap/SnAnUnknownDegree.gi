@@ -174,9 +174,9 @@ function(ri, g, c, r)
         # (sets of) elements of G
         H1, H2, x1, x2, x3,
         # helper function
-        isElmPassingTest;
+        commutesWithAtMostOne;
     # Helper function
-    isElmPassingTest := function(ri, x, H)
+    commutesWithAtMostOne := function(ri, x, H)
         local nrTrivialComm, h;
         nrTrivialComm := 0;
         for h in H do
@@ -197,17 +197,17 @@ function(ri, g, c, r)
     # Test whether an elm of the set X commutes with at least
     # two elements of H1.
     x1 := c ^ r;
-    if not isElmPassingTest(ri, x1, H1) then return false; fi;
+    if not commutesWithAtMostOne(ri, x1, H1) then return false; fi;
     x2 := cg2 ^ r;
-    if not isElmPassingTest(ri, x2, H1) then return false; fi;
+    if not commutesWithAtMostOne(ri, x2, H1) then return false; fi;
     x3 := ((cg2 ^ cg3) ^ cg4) ^ r;
-    if not isElmPassingTest(ri, x3, H1) then return false; fi;
+    if not commutesWithAtMostOne(ri, x3, H1) then return false; fi;
     # Test whether an elm of the set X commutes with at least
     # two elements of H2.
     H2 := [c, cg, ~[2] ^ cg3, ~[3] ^ cg3, ~[4] ^ cg4];
-    if not isElmPassingTest(ri, x1, H2) then return false; fi;
-    if not isElmPassingTest(ri, x2, H2) then return false; fi;
-    if not isElmPassingTest(ri, x3, H2) then return false; fi;
+    if not commutesWithAtMostOne(ri, x1, H2) then return false; fi;
+    if not commutesWithAtMostOne(ri, x2, H2) then return false; fi;
+    if not commutesWithAtMostOne(ri, x3, H2) then return false; fi;
     return true;
 end);
 
