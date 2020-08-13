@@ -328,22 +328,44 @@ function(ri, g, c, r, k)
     return r^x;
 end);
 
+# g: a k-cycle matching c of a group G
+# c: a 3-cycle of a group G
+# r: return value of AdjustCycle. If e.g. g = (1, 2, ..., k), then r would be a
+# cycle fixing 1 and 2 and moving 3
+# The algorithm AppendPoints appends new points to the cycle g. Since g will
+# always be a cycle of odd length, new points can only be appended in pairs.
+#
+# We identify the point j in {1, ..., k} with the 3-cycle c ^ (g ^ (j - 3)).
+# We store new points in the storage cycle sTilde until we have found two
+# different points. Then we append these to g.
+#
+# We return a list consisting of:
+# - gTilde, the new g
+# - sTilde, since we may call AppendPoints several times and may not have used
+# the last sTilde.
+# - kTilde, the length of gTilde
 BindGlobal("AppendPoints",
 function(ri, g, c, r, s, k, k0)
     local gc2, x, j;
-    gc2 := g * c ^ 2;
+    gTilde := g;
+    sTilde := s;
+    kTilde := k;
     x := c;
-    # Invariant: x = c ^ (r ^ j)
-    for j in [1 .. k0] do
+    for j in [1 .. k0 - 1] do
+        # invariant: x = c ^ (r ^ j)
         x := x ^ r;
-        if isone(ri)(Comm(x, gc2)) then
-            if isone(ri)(s) then
-                return [g, x, k];
-            elif not isequal(ri)(s, x) then
-                return [g * s ^ (x ^ 2), k + 2, One(s)];
-            else
-                return [g, s, k];
+        if isone(ri)(Comm(x, gTilde * c ^ 2)) then
+            # If sTilde doesn't already store a point, then store x.
+            if isone(ri)(sTilde) then
+                sTilde := x;
+            fi;
+            # Do we now have two different points? If so, append them.
+            if not isone(ri)(sTilde) and not isequal(ri)(sTilde, x) then
+                kTilde := kTilde + 2;
+                gTilde := gTilde * sTilde ^ (x ^ 2);
+                sTilde := One(gTilde);
             fi;
         fi;
     od;
+    return [gTilde, sTilde, kTilde];
 end);
