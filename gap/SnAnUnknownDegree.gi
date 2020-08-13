@@ -238,17 +238,20 @@ function(ri, g, c, r, k)
         t,
         # conjugating element
         x;
-    # We do not store the set F explicitely, but instead
-    # F4 that is the intersection of F and {1,2,3,4}
+    # According to the paper we have:
+    # F := { 1 \leq j \leq k | IsFixedPoint(g, c ^ (g ^ (j - 3)), r) = true }
+    # f1 := smallest number in F
+    # f2 := second smallest number in F
+    # m := smallest number *not* in F
+    # We do not store F explicitely. Instead we store the intersection of F and
+    # {1, 2, 3, 4} in the variable F4.
     F4 := [false, false, false, false];
     f1 := fail;
     f2 := fail;
     m := fail;
-    j := 0;
     t := c ^ (g ^ -3);
-    # invariant: t = c ^ (g ^ (j - 3))
     for j in [1 .. k] do
-        j := j + 1;
+        # invariant: t = c ^ (g ^ (j - 3))
         t := t ^ g;
         if IsFixedPoint(ri, g, t, r) then
             if j <= 4 then
@@ -262,8 +265,8 @@ function(ri, g, c, r, k)
         elif m = fail then
             m := j;
         fi;
-        # f1 and f2 being defined is equivalent to |F| >= 2
-        # m being defined is equivalent to |F| < k
+        # f1 and f2 not being fail is equivalent to |F| >= 2
+        # m not being fail is equivalent to |F| < k
         success := f1 <> fail and f2 <> fail and m <> fail;
         if success then
             if j >= 4 then
@@ -281,7 +284,8 @@ function(ri, g, c, r, k)
     # via a decision tree
     if F4[1] then
         if F4[2] then
-            # 1. Case, since 2. Case is handled in the for loop
+            # We are in the 1. Case, since the 2. Case is handled during the
+            # computation of F4 above.
             x := c ^ ((g * c ^ 2) ^ (m - 3) * c) * c;
         else
             if F4[3] then
