@@ -46,7 +46,7 @@ gap> altMatGroups := List([10],
 >                          n -> permMatGroup(AlternatingGroup(n)));;
 gap> nonAltOrSymGroups := [
 >     DihedralGroup(IsPermGroup, 10),
->     DihedralGroup(IsPcGroup, 10),
+>     #DihedralGroup(IsPcGroup, 10),
 >     #DihedralGroup(IsPermGroup, 2000),
 >     #DihedralGroup(IsPcGroup, 2000),
 >     #PSL(3, 5),
@@ -83,6 +83,33 @@ false
 # AdjustCycle
 gap> g := (1,2,3,4,5,6,7,8);;
 gap> c := (1,2,3);;
-gap> r := (1,2,3)(5,6);;
+gap> r := (4,5);;
 gap> AdjustCycle(ri, g, c, r, 8);
-(3,4,7)(5,6)
+(3,5)
+gap> r := (3,4,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,4,5)
+gap> r := (2,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,5)
+gap> r := (2,4,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,5,4)
+gap> r := (2,3,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,4,5)
+gap> r := (1,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,5)
+gap> r := (1,4,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,5,4)
+gap> r := (1,3,4,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,6,4,5)
+gap> r := (1,2,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,5,4)
+gap> r := (1,2,3,5);;
+gap> AdjustCycle(ri, g, c, r, 8);
+(3,5,4,6)
