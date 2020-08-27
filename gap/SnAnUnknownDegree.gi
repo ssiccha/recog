@@ -482,3 +482,143 @@ function(ri, c, x, N)
     # mDash >= N / 2
     return fail;
 end);
+
+# ri : recog info record
+# c : three-cycle
+# eps : error probability
+# N : upper bound for degree of the group
+# We return either fail or a list consisting of:
+# - g, cycle matching c
+# - k, length of cycle g.
+BindGlobal("ConstructLongCycle",
+function(ri, c, eps, N)
+    local g, k, tmp, B, x;
+    B := BolsteringElements(ri, c, Float(eps) / 2., N);
+    if Length(B) < Int(Ceil(7./4. * Log(2. / Float(eps)))) then
+        return fail;
+    fi;
+    k := 0;
+    for x in B do
+        tmp := BuildCycle(ri, c, x, N);
+        if tmp = fail then
+            return fail;
+        elif tmp[2] > k then
+            g := tmp[1];
+            k := tmp[2];
+        fi;
+    od;
+    return [g, k];
+end);
+
+# ri : recog info record
+# g : cycle matching c
+# c : three-cycle
+BindGlobal("StandardGenerators",
+function(ri, g, c, k, eps, N)
+    local s, k0, c2, r, kTilde, gTilde, i, x, m, tmp, cTilde;
+    s := One(g);
+    k0 := k - 2;
+    c2 := c ^ 2;
+    r := g * c2;
+    kTilde := k;
+    gTilde := g;
+    for i in [1 .. Int(Ceil(Log(10. / 3.) ^ (-1) * (Log(Float(N)) + Log(1 / Float(eps)))))] do
+        x := r ^ RandomElm(ri,"simplesocle",true)!.el;
+        m := AdjustCycle(ri, gTilde, c, x, kTilde);
+        if m = fail then return fail; fi;
+        tmp := AppendPoints(ri, gTilde, c, m, s, kTilde, k0);
+        gTilde := tmp[1];
+        s := tmp[2];
+        kTilde := tmp[3];
+        if kTilde > N then return fail; fi;
+    od;
+    if isone(ri)(s) then
+        gTilde := c2 * gTilde;
+        cTilde := c;
+    else
+        kTilde := kTilde + 1;
+        gTilde := gTilde * s;
+        cTilde := s;
+    fi;
+    if SatisfiesAnPresentation(ri, gTilde, cTilde, kTilde) then
+        return [gTilde, cTilde, kTilde];
+    else
+        return fail;
+    fi;
+end);
+
+BindGlobal("SatisfiesAnPresentation",
+function(ri, s, t, n)
+    local j, r, ti;
+
+    if not(isone(ri)(s^(n-2))) or not(isone(ri)(t^3)) then
+        return false;
+    fi;
+
+    if n mod 2 <> 0 then
+        # we already know s^(n-2) = t^3 = 1
+        if not(isone(ri)((s * t)^n)) then
+            return false;
+        fi;
+        j := 1;
+        r := s^0;
+        while j <= (n-3)/2  do
+            r := r * s;
+            if not(isone(ri)((t *(t^r))^2)) then
+                return false;
+            fi;
+            j := j + 1;
+        od;
+        return true;
+    else
+        # we already know s^(n-2) = t^3 = 1
+        if not(isone(ri)((s * t)^(n-1))) then
+            return false;
+        fi;
+        j := 1;
+        r := s^0;
+        while j <= (n-2)/2  do
+            r := r * s;
+            ti := t^-1;
+            if (IsEvenInt(j) and not(isone(ri)((t *(t^r))^2))) or
+               (IsOddInt(j) and not(isone(ri)((ti *(t^r))^2))) then
+                return false;
+            fi;
+            j := j + 1;
+        od;
+        return true;
+    fi;
+end);
+
+# UNFINISHED
+# currently returns standard gens of An
+BindGlobal("RecogniseSnAn",
+function(ri, eps, N)
+    local T, c, tmp, g, k, n, iterator;
+    T := Int(Ceil(Log(1 / Float(eps))));
+    repeat
+        T := T - 1;
+        iterator := ThreeCycleCandidatesIterator(ri, eps, N);
+        c := iterator();
+        while c <> TemporaryFailure do
+            if c = NeverApplicable then return NeverApplicable; fi;
+            tmp := ConstructLongCycle(ri, c, 1. / 8., N);
+            if tmp = fail then
+                c := iterator();
+                continue;
+            fi;
+            g := tmp[1];
+            k := tmp[2];
+            tmp := StandardGenerators(ri, g, c, k, 1. / 8., N);
+            if tmp = fail then
+                c := iterator();
+                continue;
+            fi;
+            g := tmp[1];
+            c := tmp[2];
+            n := tmp[3];
+            return [g, c, n];
+        od;
+    until T = 0;
+    return fail;
+end);
