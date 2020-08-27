@@ -346,7 +346,7 @@ end);
 # - kTilde, the length of gTilde
 BindGlobal("AppendPoints",
 function(ri, g, c, r, s, k, k0)
-    local gc2, x, j;
+    local gTilde, sTilde, kTilde, gc2, x, j;
     gTilde := g;
     sTilde := s;
     kTilde := k;
@@ -368,4 +368,117 @@ function(ri, g, c, r, s, k, k0)
         fi;
     od;
     return [gTilde, sTilde, kTilde];
+end);
+
+# ri : recog info record
+# g : element of a group
+# p : prime
+# We return true, if g is an element of order p.
+BindGlobal("IsElmOfPrimeOrder",
+function(ri, g, p)
+    if not isone(ri)(g) and isone(ri)(g ^ p) then
+        return true;
+    else
+        return false;
+    fi;
+end);
+
+# c: a 3-cycle of a group G
+# x : bolstering element with respect to c
+# The algorithm BuildCycle determines a cycle g of length k matching c.
+# We return either fail or a list consisting of:
+# - g, cycle matching c
+# - k, length of cycle g.
+BindGlobal("BuildCycle",
+function(ri, c, x, N)
+    local
+        # Floor(N / 2)
+        N2,
+        # min(alpha, beta)
+        m,
+        # d = c ^ (x ^ (m + 1))
+        d,
+        # y = c * c ^ x * c ^ (x ^ 2) * ... * c ^ (x ^ m)
+        y,
+        # is false, if m >= N/2
+        isMinInitialized,
+        # dx = d ^ x = c ^ (x ^ (m + 2))
+        dx,
+        # element defined as in the case distinction
+        e,
+        # d ^ e
+        z,
+        # z ^ (x ^ 2 * (mDash - 1))
+        zxMinus,
+        # z ^ (x ^ 2 * (mDash))
+        zx,
+        # z ^ (x ^ 2 * (mDash + 1))
+        zxPlus,
+        # integer computed as in Remark 4.9
+        mDash,
+        # cycle matching c
+        g;
+    # Here we set m := 0
+    N2 := Int(Floor(Float(N) / 2.));
+    y := c;
+    d := c ^ x;
+    isMinInitialized := false;
+    for m in [1 .. N2] do
+        y := y * d;
+        d := d ^ x;
+        if not IsElmOfPrimeOrder(ri, d * c, 5) then
+            isMinInitialized := true;
+            break;
+        fi;
+    od;
+    if not isMinInitialized then
+        return fail;
+    fi;
+    # Case |alpha - beta| = 0
+    if isequal(ri)(d, c) or isequal(ri)(d, c ^ 2) then
+        return [y, 2 * m + 3];
+    fi;
+    # Case |alpha - beta| = 1
+    dx := d ^ x;
+    if not IsElmOfPrimeOrder(ri, dx * c, 5) then
+        return [y, 2 * m + 3];
+    fi;
+    # Case |alpha - beta| >= 2
+    # Case distinction on element e
+    if IsElmOfPrimeOrder(ri, d * c, 2) then
+        # w not in v ^ <x>
+        if isone(ri)(Comm(dx, d ^ c)) then
+            # Case 4, alpha < beta
+            e := (d ^ (x * c)) ^ 2;
+        else
+            # Case 3, alpha > beta
+            e := d ^ (x * c ^ 2);
+        fi;
+    else
+        # w in v ^ <x>
+        if isone(ri)(Comm(dx, d ^ c)) then
+            # Case 1, alpha > beta
+            e := d ^ (x * c);
+        else
+            # Case 2, alpha < beta
+            e := (d ^ (x * c ^ 2)) ^ 2;
+        fi;
+    fi;
+    z := d ^ e;
+    # Here we set mDash := 1
+    zxMinus := z;
+    zx := zxMinus ^ (x ^ 2);
+    zxPlus := zx ^ (x ^ 2);
+    g := y * zxMinus;
+    for mDash in [1 .. N2] do
+        if not IsElmOfPrimeOrder(ri, zxPlus, 5) then
+            return [g, 2 * mDash + 2 * m + 3];
+        fi;
+        zxMinus := zx;
+        zx := zxPlus;
+        zxPlus := zxPlus ^ (x ^ 2);
+        g := y * zxMinus;
+    od;
+    # mDash >= N / 2
+    return fail;
 end);

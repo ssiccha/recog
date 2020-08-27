@@ -1,6 +1,6 @@
 #@local testFunction, degrees
 #@local altGroups, symGroups, permMatGroup, altMatGroups, nonAltOrSymGroups
-#@local ri, g, c, r, i
+#@local ri, g, c, r, i, x
 #
 # testing matrix:
 # - isomorphic: yes, no
@@ -81,6 +81,7 @@ gap> IsFixedPoint(ri, g,c,r);
 false
 
 # AdjustCycle
+gap> ri := EmptyRecognitionInfoRecord(rec(), SymmetricGroup(10), false);;
 gap> g := (1,2,3,4,5,6,7,8);;
 gap> c := (1,2,3);;
 gap> r := (4,5);;
@@ -113,3 +114,61 @@ gap> AdjustCycle(ri, g, c, r, 8);
 gap> r := (1,2,3,5);;
 gap> AdjustCycle(ri, g, c, r, 8);
 (3,5,4,6)
+
+# BuildCycle
+gap> ri := EmptyRecognitionInfoRecord(rec(), SymmetricGroup(10), false);;
+
+# c = (u,v,w)
+gap> c := (1,2,3);;
+
+# Form 1: x = (v,a_1,...,a_alpha) * (w,b_1,....,b_beta) * (...)
+# alpha - beta = 0
+gap> x := (2,4,5,6)* (3,7,8,9);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,6,9), 9 ]
+
+# alpha - beta = -1
+gap> x := (2,4,5,6)* (3,7,8,9,10);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,6,9), 9 ]
+
+# alpha - beta = 1
+gap> x := (2,4,5,6,10)* (3,7,8,9);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,6,9), 9 ]
+
+# alpha - beta = -2
+gap> x := (2,4,5) * (3,7,8,9,10);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,10,9), 9 ]
+
+# alpha - beta = 2
+gap> x := (2,4,5,6,10) * (3,7,8);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,6,10), 9 ]
+
+# Form 2: x = (v,a_1,...,a_alpha,w,b_1,....,b_beta) * (...)
+# alpha - beta = 0
+gap> x := (2,4,5,6,3,7,8,9);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,6,9), 9 ]
+
+# alpha - beta = -1
+gap> x := (2,4,5,6,3,7,8,9,10);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,6,9), 9 ]
+
+# alpha - beta = 1
+gap> x := (2,4,5,6,10,3,7,8,9);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,6,9), 9 ]
+
+# alpha - beta = -2
+gap> x := (2,4,5,3,7,8,9,10);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,10,9), 9 ]
+
+# alpha - beta = 2
+gap> x := (2,4,5,6,10,3,7,8);;
+gap> BuildCycle(ri, c, x, 10);
+[ (1,2,3,4,7,5,8,6,10), 9 ]
