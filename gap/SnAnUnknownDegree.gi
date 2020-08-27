@@ -547,49 +547,6 @@ function(ri, g, c, k, eps, N)
     fi;
 end);
 
-BindGlobal("SatisfiesAnPresentation",
-function(ri, s, t, n)
-    local j, r, ti;
-
-    if not(isone(ri)(s^(n-2))) or not(isone(ri)(t^3)) then
-        return false;
-    fi;
-
-    if n mod 2 <> 0 then
-        # we already know s^(n-2) = t^3 = 1
-        if not(isone(ri)((s * t)^n)) then
-            return false;
-        fi;
-        j := 1;
-        r := s^0;
-        while j <= (n-3)/2  do
-            r := r * s;
-            if not(isone(ri)((t *(t^r))^2)) then
-                return false;
-            fi;
-            j := j + 1;
-        od;
-        return true;
-    else
-        # we already know s^(n-2) = t^3 = 1
-        if not(isone(ri)((s * t)^(n-1))) then
-            return false;
-        fi;
-        j := 1;
-        r := s^0;
-        while j <= (n-2)/2  do
-            r := r * s;
-            ti := t^-1;
-            if (IsEvenInt(j) and not(isone(ri)((t *(t^r))^2))) or
-               (IsOddInt(j) and not(isone(ri)((ti *(t^r))^2))) then
-                return false;
-            fi;
-            j := j + 1;
-        od;
-        return true;
-    fi;
-end);
-
 # UNFINISHED
 # currently returns standard gens of An
 BindGlobal("RecogniseSnAn",

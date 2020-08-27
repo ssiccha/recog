@@ -59,57 +59,51 @@
 #
 #
 # ##  is <s,t> in A_n
-#
-# SatisfiesAnPresentation := function( n, s, t )
-#
-#     local j, r, ti;
-#
-#     Info( InfoRecSnAn, 1, "calling Satisfies An Presentation");
-#
-#     if not(RecSnAnIsOne(s^(n-2))) or not(RecSnAnIsOne(t^3)) then
-#         Info( InfoRecSnAn, 1, "does not satisfy presentation-1");
-#         return false;
-#     fi;
-#
-#     if n mod 2 <> 0 then
-#         # we already know s^(n-2) = t^3 = 1
-#         if not(RecSnAnIsOne((s * t)^n)) then
-#             Info( InfoRecSnAn, 1, "does not satisfy presentation");
-#             return false;
-#         fi;
-#         j := 1;
-#         r := s^0;
-#         while j <= (n-3)/2  do
-#             r := r * s;
-#             if not(RecSnAnIsOne((t *(t^r))^2)) then
-#                 Info( InfoRecSnAn, 1, "does not satisfy presentation");
-#                 return false;
-#             fi;
-#             j := j + 1;
-#         od;
-#         return true;
-#     else
-#         # we already know s^(n-2) = t^3 = 1
-#         if not(RecSnAnIsOne((s * t)^(n-1))) then
-#             Info( InfoRecSnAn, 1, "does not satisfy presentation");
-#             return false;
-#         fi;
-#         j := 1;
-#         r := s^0;
-#         while j <= (n-2)/2  do
-#             r := r * s;
-#             ti := t^-1;
-#             if (IsEvenInt(j) and not(RecSnAnIsOne((t *(t^r))^2))) or
-#                (IsOddInt(j) and not(RecSnAnIsOne((ti *(t^r))^2))) then
-#                 Info( InfoRecSnAn, 1, "does not satisfy presentation");
-#                 return false;
-#             fi;
-#             j := j + 1;
-#         od;
-#         return true;
-#     fi;
-#
-# end;
+# Arguments were changed: previously arguments were (n, s, t). Now we use
+# isone(ri) instead of RecSnAnIsOne.
+BindGlobal("SatisfiesAnPresentation",
+function(ri, s, t, n)
+    local j, r, ti;
+
+    if not(isone(ri)(s^(n-2))) or not(isone(ri)(t^3)) then
+        return false;
+    fi;
+
+    if n mod 2 <> 0 then
+        # we already know s^(n-2) = t^3 = 1
+        if not(isone(ri)((s * t)^n)) then
+            return false;
+        fi;
+        j := 1;
+        r := s^0;
+        while j <= (n-3)/2  do
+            r := r * s;
+            if not(isone(ri)((t *(t^r))^2)) then
+                return false;
+            fi;
+            j := j + 1;
+        od;
+        return true;
+    else
+        # we already know s^(n-2) = t^3 = 1
+        if not(isone(ri)((s * t)^(n-1))) then
+            return false;
+        fi;
+        j := 1;
+        r := s^0;
+        while j <= (n-2)/2  do
+            r := r * s;
+            ti := t^-1;
+            if (IsEvenInt(j) and not(isone(ri)((t *(t^r))^2))) or
+               (IsOddInt(j) and not(isone(ri)((ti *(t^r))^2))) then
+                return false;
+            fi;
+            j := j + 1;
+        od;
+        return true;
+    fi;
+end);
+
 #
 #
 # NiceGeneratorsSnAn := function ( n, grp, N )
