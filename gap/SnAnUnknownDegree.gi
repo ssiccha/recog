@@ -424,6 +424,10 @@ end);
 # returns either fail or a list consisting of:
 # - g, cycle matching c
 # - k, length of cycle g.
+#
+# We return fail if one of the following holds:
+# - N is not an upper bound for the degree of G
+# - c is not a 3-cycle
 BindGlobal("BuildCycle",
 function(ri, c, x, N)
     local
@@ -518,24 +522,39 @@ function(ri, c, x, N)
     return fail;
 end);
 
+# NOTE: Output in paper is reversed.
+#
 # ri : recog info record with group G
-# c : three-cycle
-# eps : error probability
-# N : upper bound for degree of the group
-# returns either fail or a list consisting of:
-# - g, cycle matching c
-# - k, length of cycle g.
+# c : element of G,
+#     should be a 3-cycle
+# eps : real number, the error bound
+# N : integer, upper bound for the degree of G
+#
+# Returns fail or a list consisting of:
+# - g: element of G,
+#      should be a k-cycle matching c
+# - k: integer,
+#      should be length of cycle g.
+#
+# We return fail if one of the following holds:
+# - the list of bolstering elements is too small
+# - N is not an upper bound for the degree of G
+# - c is not a 3-cycle
 BindGlobal("ConstructLongCycle",
 function(ri, c, eps, N)
     local g, k, tmp, B, x;
     B := BolsteringElements(ri, c, Float(eps) / 2., N);
     if Length(B) < Int(Ceil(7./4. * Log(2. / Float(eps)))) then
+        # the list of bolstering elements is too small
         return fail;
     fi;
     k := 0;
     for x in B do
         tmp := BuildCycle(ri, c, x, N);
         if tmp = fail then
+            # One of the following holds:
+            # - N is not an upper bound for the degree of G
+            # - c is not a 3-cycle
             return fail;
         elif tmp[2] > k then
             g := tmp[1];
