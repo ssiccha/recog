@@ -122,7 +122,9 @@ end);
 #     should be a 3-cycle
 # eps : real number, the error bound
 # N : integer, upper bound for the degree of G
+#
 # Returns a list of elements of G.
+#
 # If the input is as assumed, then this function returns a list of bolstering
 # elements with respect to c.
 BindGlobal("BolsteringElements",
@@ -167,7 +169,9 @@ end);
 # c : element of G,
 #     should be a 3-cycle
 # r : element of G
+#
 # Returns a boolean.
+#
 # If the input is as assumed, then the supports of c and c^(g^2) have exactly
 # one point, say alpha, in common and this function returns whether alpha is a
 # fixed point of r.
@@ -228,7 +232,9 @@ end);
 #     least two moved points of g
 # k : integer,
 #     should be length of cycle g
+#
 # Returns fail or a conjugate of r.
+#
 # W.l.o.g. let g = (1, ..., k) and c = (1, 2, 3).
 # If the input is as assumed, then the algorithm returns a conjugate r ^ x such
 # that r ^ x fixes the points 1, 2 but not the point 3.
@@ -342,25 +348,35 @@ function(ri, g, c, r, k)
 end);
 
 # ri : recog info record with group G
-# g : a k-cycle matching c of a group G
-# c : a 3-cycle of a group G
-# r : return value of AdjustCycle. If e.g. g = (1, 2, ..., k), then r would be a
-# cycle fixing 1 and 2 and moving 3
-# s : element of group G, storage cycle
-# k : length of cycle g
-# k0 : length of cycle r
+# g : element of G,
+#     should be a k-cycle matching c
+# c : element of G,
+#     should be a 3-cycle
+# r : element of G,
+#     should be a cycle as in the return value of AdjustCycle. If e.g.
+#     g = (1, 2, ..., k), then r would be a cycle fixing 1 and 2 and moving 3.
+# s : element of group G,
+#     should be a storage cycle
+# k : integer,
+#     should be length of cycle g
+# k0 : integer,
+#      should be length of cycle r
 #
-# The algorithm AppendPoints appends new points to the cycle g. Since g will
-# always be a cycle of odd length, new points can only be appended in pairs.
-# We identify the point j in {1, ..., k} with the 3-cycle c ^ (g ^ (j - 3)).
-# We store new points in the storage cycle sTilde until we have found two
-# different points. Then we append these to g.
+# Returns a list consisting of:
+# - gTilde: element of G,
+#           should be a cycle matching g
+# - sTilde: element of G,
+#           should be current storage cycle, since we may call AppendPoints
+#           several times and may not have used the last sTilde.
+# - kTilde: integer,
+#           should be the length of gTilde
 #
-# We return a list consisting of:
-# - gTilde, cycle matching g
-# - sTilde, since we may call AppendPoints several times and may not have used
-# the last sTilde.
-# - kTilde, the length of gTilde
+# The algorithm appends new points to the cycle g. Since g will always be a
+# cycle of odd length, new points can only be appended in pairs. We identify
+# the point j in {1, ..., k} with the 3-cycle c ^ (g ^ (j - 3)). We store new
+# points in the storage cycle sTilde until we have found two different points.
+# Then we append these to g.
+
 BindGlobal("AppendPoints",
 function(ri, g, c, r, s, k, k0)
     local gTilde, sTilde, kTilde, gc2, x, j;
