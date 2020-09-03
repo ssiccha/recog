@@ -120,13 +120,11 @@ end);
 # ri : recog info record with group G
 # c : element of G,
 #     should be a 3-cycle
-# eps : real number s.t. 0 < eps < 1, error probability
-# N : integer,
-#     should be an upper bound for the degree of G
-# Returns a list of group elements.
-# If the input is as assumed,
-# then this function returns a list of
-# bolstering elements with respect to c.
+# eps : real number, the error bound
+# N : integer, upper bound for the degree of G
+# Returns a list of elements of G.
+# If the input is as assumed, then this function returns a list of bolstering
+# elements with respect to c.
 BindGlobal("BolsteringElements",
 function(ri, c, eps, N)
     local result, R, S, prebolsteringElms, i, r, cr, cr2;
@@ -170,9 +168,9 @@ end);
 #     should be a 3-cycle
 # r : element of G
 # Returns a boolean.
-# If the input is as assumed,
-# then the supports of c and c^(g^2) have exactly one point, say alpha, in common.
-# and this function decides whether alpha is a fixed point of r.
+# If the input is as assumed, then the supports of c and c^(g^2) have exactly
+# one point, say alpha, in common and this function returns whether alpha is a
+# fixed point of r.
 BindGlobal("IsFixedPoint",
 function(ri, g, c, r)
     local
@@ -228,7 +226,7 @@ end);
 # r : element of G,
 #     should have at least one moved point in common with g and should fix at
 #     least two moved points of g
-# k : integer k,
+# k : integer,
 #     should be length of cycle g
 # Returns fail or a conjugate of r.
 # W.l.o.g. let g = (1, ..., k) and c = (1, 2, 3).
