@@ -403,11 +403,10 @@ function(ri, g, c, r, s, k, k0)
     return [gTilde, sTilde, kTilde];
 end);
 
-# ri : recog info record
-# g : element of a group
+# ri : recog info record with group G
+# g : element of G
 # p : prime
-# Returns boolean.
-# We return true, if g is an element of order p.
+# Returns whether g is an element of order p.
 BindGlobal("IsElmOfPrimeOrder",
 function(ri, g, p)
     if not isone(ri)(g) and isone(ri)(g ^ p) then
