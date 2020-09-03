@@ -222,7 +222,7 @@ end);
 # g : element of G,
 #     should be a k-cycle matching c
 # c : element of G,
-#     should be a 3-cycle of a group G
+#     should be a 3-cycle
 # r : element of G,
 #     should have at least one moved point in common with g and should fix at
 #     least two moved points of g
@@ -230,8 +230,8 @@ end);
 #     should be length of cycle g
 # Returns fail or a conjugate of r.
 # W.l.o.g. let g = (1, ..., k) and c = (1, 2, 3).
-# If the input is as assumed, then the algorithm returns a conjugate r^x such
-# that r fixes the points 1, 2 but not the point 3.
+# If the input is as assumed, then the algorithm returns a conjugate r ^ x such
+# that r ^ x fixes the points 1, 2 but not the point 3.
 BindGlobal("AdjustCycle",
 function(ri, g, c, r, k)
     local
