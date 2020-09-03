@@ -118,12 +118,14 @@ BindGlobal("ThreeCycleCandidatesIterator",
 end);
 
 # ri : recog info record with group G
-# c : possibly a 3-cycle
-# eps : error probability
-# N : upper bound for degree of G
+# c : element of G,
+#     should be a 3-cycle
+# eps : real number s.t. 0 < eps < 1, error probability
+# N : integer,
+#     should be an upper bound for the degree of G
 # Returns a list of group elements.
-# If G is isomorphic to an alternating or
-# symmetric group and c is a 3-cycle, then this function returns a list of
+# If the input is as assumed,
+# then this function returns a list of
 # bolstering elements with respect to c.
 BindGlobal("BolsteringElements",
 function(ri, c, eps, N)
@@ -162,13 +164,15 @@ function(ri, c, eps, N)
 end);
 
 # ri : recog info record with group G
-# g : a cycle matching c of a group G
-# c : a 3-cycle of a group G
-# r : arbitrary element of a group G
+# g : element of G,
+#     should be a cycle matching c
+# c : element of G,
+#     should be a 3-cycle
+# r : element of G
 # Returns a boolean.
-# The supports of c and c^(g^2) have exactly one point, say alpha, in common.
-# Let phi be an isomorphism from G to a natural alternating or symmetric group.
-# This function decides whether alpha is a fixed point of phi(r).
+# If the input is as assumed,
+# then the supports of c and c^(g^2) have exactly one point, say alpha, in common.
+# and this function decides whether alpha is a fixed point of r.
 BindGlobal("IsFixedPoint",
 function(ri, g, c, r)
     local
