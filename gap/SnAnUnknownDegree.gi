@@ -221,16 +221,19 @@ function(ri, g, c, r)
 end);
 
 # ri : recog info record with group G
-# g : a k-cycle matching c of a group G
-# c : a 3-cycle of a group G
-# r : element of a group G
-# k : length of cycle g
+# g : element of G,
+#     should be a k-cycle matching c
+# c : element of G,
+#     should be a 3-cycle of a group G
+# r : element of G,
+#     should have at least one moved point in common with g and should fix at
+#     least two moved points of g
+# k : integer k,
+#     should be length of cycle g
 # Returns fail or a conjugate of r.
 # W.l.o.g. let g = (1, ..., k) and c = (1, 2, 3).
-# If the support of g has at least one point in common with the support of r
-# and at least two points of support of g are fixed by r,
-# then the algorithm returns a conjugate r^x such that r fixes the points 1, 2
-# but not the point 3.
+# If the input is as assumed, then the algorithm returns a conjugate r^x such
+# that r fixes the points 1, 2 but not the point 3.
 BindGlobal("AdjustCycle",
 function(ri, g, c, r, k)
     local
