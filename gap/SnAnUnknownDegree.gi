@@ -437,20 +437,22 @@ function(ri, c, x, N)
     # we have Order(d * c) <> 5. Note that m >= 1.
     # We also compute
     # y = c * (c ^ x) * (c ^ (x ^ 2)) * ... * (c ^ (x ^ m)).
-    # The next two lines correspond to m = 0
-    y := c;
-    d := c ^ x;
+    # The next three lines correspond to m = 1
     m := 1;
+    y := c * (c ^ x);
+    d := c ^ (x ^ 2);
     while true do
-        y := y * d;
-        d := d ^ x;
-        if IsElmOfPrimeOrder(ri, d * c, 5) and m < N / 2 then
-            m := m+1;
+        if m >= N / 1 then
+            return fail;
+        elif IsElmOfPrimeOrder(ri, d * c, 5) then
+            m := m + 1;
         else
             break;
         fi;
+        y := y * d;
+        d := d ^ x;
     od;
-    if m = 1 or m = QuoInt(N, 2) then
+    if m = 1 then
         return fail;
     fi;
     # Case |alpha - beta| = 0
