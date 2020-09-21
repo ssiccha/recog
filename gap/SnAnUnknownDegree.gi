@@ -430,7 +430,7 @@ function(ri, c, x, N)
         # integers
         m, mDash,
         # group elements
-        d, y, dx, e, z, f, g;
+        d, y, dx, e, z, f, g, xSquared;
     # Compute m.
     # m is the least natural number such that with
     # d = c ^ (x ^ (m + 1))
