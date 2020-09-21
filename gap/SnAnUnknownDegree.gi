@@ -140,7 +140,7 @@ function(ri, c, eps, N)
         r := RandomElm(ri,"simplesocle",true)!.el;
         # test whether r is pre-bolstering
         cr := c ^ r;
-        cr2 := c ^ (r ^ 2);
+        cr2 := cr ^ r;
         if not isone(ri)(Comm(cr, c))
                 and not isequal(ri)(cr2, c)
                 and not isequal(ri)(cr2, c ^ 2)
@@ -152,8 +152,8 @@ function(ri, c, eps, N)
     od;
     # construct bolstering elements
     for r in prebolsteringElms do
-        if isone(ri)((c ^ (r * c * r)
-                      * c ^ (r * c ^ (r ^ 2) * c)) ^ 3)
+        if isone(ri)((cr ^ (c * r)
+                      * cr ^ (cr2 * c)) ^ 3)
         then
             Add(result, c ^ 2 * r);
         else
