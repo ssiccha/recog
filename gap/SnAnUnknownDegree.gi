@@ -151,8 +151,7 @@ end);
 # c : element of G,
 #     should be a 3-cycle
 # eps : real number, the error bound
-# N : integer,
-#     should be an upper bound for the degree of G
+# N : integer, upper bound for the degree of G
 #
 # Returns a list of elements of G.
 #
