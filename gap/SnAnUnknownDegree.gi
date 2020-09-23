@@ -26,7 +26,9 @@ function(n)
 end);
 
 
-# Input: Group G, upper error bound eps, upper degree bound N
+# ri : recog info record with group G
+# eps : error bound
+# N : degree bound
 #
 # The following algorithm constructs a set of possible 3-cycles. It is based
 # on the simple observation that the product of two involutions t1, t2, which
@@ -149,7 +151,8 @@ end);
 # c : element of G,
 #     should be a 3-cycle
 # eps : real number, the error bound
-# N : integer, upper bound for the degree of G
+# N : integer,
+#     should be an upper bound for the degree of G
 #
 # Returns a list of elements of G.
 #
@@ -197,9 +200,9 @@ end);
 #
 # Returns a boolean.
 #
-# If the input is as assumed, then the supports of c and c^(g^2) have exactly
-# one point, say alpha, in common and this function returns whether alpha is a
-# fixed point of r.
+# If the input is as assumed, that is in particular the supports of c and
+# c^(g^2) have exactly one point, say alpha, in common, then this function
+# returns whether alpha is a fixed point of r.
 BindGlobal("IsFixedPoint",
 function(ri, g, c, r)
     local
@@ -401,7 +404,6 @@ end);
 # the point j in {1, ..., k} with the 3-cycle c ^ (g ^ (j - 3)). We store new
 # points in the storage cycle sTilde until we have found two different points.
 # Then we append these to g.
-
 BindGlobal("AppendPoints",
 function(ri, g, c, r, s, k, k0)
     local gTilde, sTilde, kTilde, gc2, x, j;
@@ -540,8 +542,6 @@ function(ri, c, x, N)
     return [g, 2 * mDash + 2 * m + 3];
 end);
 
-# NOTE: Output in paper is reversed.
-#
 # ri : recog info record with group G
 # c : element of G,
 #     should be a 3-cycle
@@ -553,6 +553,9 @@ end);
 #      should be a k-cycle matching c
 # - k: integer,
 #      should be length of cycle g.
+#
+# Note that the order of the returned list is reversed wrt the paper to be
+# consistent with the return values of the other functions.
 #
 # We return fail if one of the following holds:
 # - the list of bolstering elements is too small
