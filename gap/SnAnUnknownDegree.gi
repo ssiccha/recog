@@ -466,11 +466,13 @@ function(ri, c, x, N)
     # We also compute
     # y = c * (c ^ x) * (c ^ (x ^ 2)) * ... * (c ^ (x ^ m)).
     # The next three lines correspond to m = 1
+    # We use x ^ 2 several times.
+    xSquared := x ^ 2;
     m := 1;
     y := c * (c ^ x);
-    d := c ^ (x ^ 2);
+    d := c ^ xSquared;
     while true do
-        if m >= N / 1 then
+        if m >= N / 2 then
             return fail;
         elif IsElmOfPrimeOrder(ri, d * c, 5) then
             m := m + 1;
@@ -520,12 +522,10 @@ function(ri, c, x, N)
     # we have Order(f * c) <> 5. Note that mDash >= 1.
     # We also compute
     # g = y * z * (z ^ (x ^ 2)) * ... * (z ^ (x ^ (2 * (mDash - 1)))).
-    # We use x ^ 2  several times.
-    xSquared := x ^ 2;
     # The next three lines correspond to mDash = 1
     mDash := 1;
     g := y * z;
-    f := z * xSquared;
+    f := z ^ xSquared;
     while true do
         if mDash >= N / 2 then
             return fail;
