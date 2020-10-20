@@ -36,8 +36,6 @@ ReadPackage("recog","gap/generic/KnownNilpotent.gi");
 ReadPackage("recog","gap/perm/giant.gi");
 ReadPackage("recog","gap/perm/largebase.gi");
 ReadPackage("recog","gap/SnAnUnknownDegree.gi");
-
-# Up to now there is not much here:
 ReadPackage("recog","gap/SnAnBB.gi");
 
 # Matrices/Projective:

@@ -1,0 +1,9 @@
+DeclareGlobalName("SatisfiesSnPresentation");
+DeclareGlobalName("SatisfiesAnPresentation");
+DeclareGlobalName("Binary");
+DeclareGlobalName("ConstructXiSn");
+DeclareGlobalName("ConstructXiAn");
+DeclareGlobalName("IsImagePointSn");
+DeclareGlobalName("IsImagePointAn");
+DeclareGlobalName("FindImageSn");
+DeclareGlobalName("FindImageAn");

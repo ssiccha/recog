@@ -22,6 +22,7 @@ ReadPackage("recog","gap/base/recognition.gd");
 ReadPackage("recog","gap/base/projective.gd");
 
 ReadPackage("recog","gap/SnAnUnknownDegree.gd");
+ReadPackage("recog","gap/SnAnBB.gd");
 
 ReadPackage("recog","gap/matrix.gd");
 
