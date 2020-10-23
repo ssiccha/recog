@@ -507,6 +507,14 @@ end;
 #! <M>r \cdot k > 1</M>
 #! and <M>2 \cdot r \cdot k^2 \le n</M>.
 #!
+#! A large primitive group <M>H</M>of the above type which does have fixed
+#! points is handled as follows.  After a call of <C>LargeBasePrimitive</C>,
+#! the group <M>H</M> knows that it is primitive. Thus, after
+#! LargeBasePrimitive returns <K>NeverApplicable</K>, the function
+#! <Ref Func="ThrowAwayFixedPoints"/> will prune away the fixed points and set
+#! up a homomorphism. <C>LargeBasePrimitive</C> is then applicable to the image
+#! of that homomorphism.
+#!
 #! If <A>G</A> is imprimitive then the output is
 #! <K>NeverApplicable</K>. If <A>G</A> is primitive then
 #! the output is either a homomorphism into the
@@ -526,6 +534,7 @@ FindHomMethodsPerm.LargeBasePrimitive :=
     fi;
     RECOG.SetPseudoRandomStamp(grp,"Jellyfish");
     res := RECOG.AllJellyfish(grp);
+    RECOG.SetPseudoRandomStamp(grp,"PseudoRandom");
     if res = NeverApplicable or res = TemporaryFailure then
         return res;
     fi;
