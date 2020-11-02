@@ -438,10 +438,12 @@ function(ri, c, x, N)
     # We also compute
     # y = c * (c ^ x) * (c ^ (x ^ 2)) * ... * (c ^ (x ^ m)).
     # The next two lines correspond to m = 0
+    Print("BuildCycle: x = ", x!.el, " \c");
     y := c;
     d := c ^ x;
     m := 1;
     while true do
+        Print(y, " = y, \c");
         y := y * d;
         d := d ^ x;
         if IsElmOfPrimeOrder(ri, d * c, 5) and m < N / 2 then
@@ -450,6 +452,7 @@ function(ri, c, x, N)
             break;
         fi;
     od;
+    Print(m, " = m, \n");
     if m = 1 or m = QuoInt(N, 2) then
         return fail;
     fi;
@@ -531,9 +534,11 @@ end);
 BindGlobal("ConstructLongCycle",
 function(ri, c, eps, N)
     local g, k, tmp, B, x;
+    Print("ConstructLongCycle: c ", c, "\n");
     B := BolsteringElements(ri, c, Float(eps) / 2., N);
     if Length(B) < Int(Ceil(7./4. * Log(2. / Float(eps)))) then
         # the list of bolstering elements is too small
+        Print("Too few Bolstering elms\n");
         return fail;
     fi;
     k := 0;
@@ -543,6 +548,7 @@ function(ri, c, eps, N)
             # One of the following holds:
             # - N is not an upper bound for the degree of G
             # - c is not a 3-cycle
+            Print("BuildCycle fails!\n");
             return fail;
         elif tmp[2] > k then
             g := tmp[1];
@@ -603,6 +609,7 @@ function(ri, eps, N)
             if c = NeverApplicable then return NeverApplicable; fi;
             tmp := ConstructLongCycle(ri, c, 1. / 8., N);
             if tmp = fail then
+                Print("ConstructLongCycle failed.\n");
                 c := iterator();
                 continue;
             fi;
@@ -610,6 +617,7 @@ function(ri, eps, N)
             k := tmp[2];
             tmp := StandardGenerators(ri, g, c, k, 1. / 8., N);
             if tmp = fail then
+                Print("StandardGenerators failed.\n");
                 c := iterator();
                 continue;
             fi;
