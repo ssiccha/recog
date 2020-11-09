@@ -711,3 +711,52 @@ function(ri, eps, N)
     od;
     return TemporaryFailure;
 end);
+
+FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
+    local G, N, isoData, degree;
+    G := Grp(ri);
+    # TODO find value for N and eps
+    # Check magma
+    if IsPermGroup(G) then
+        N := NrMovedPoints(G);
+    else
+        N := ErrorNoReturn("TODO");
+    fi;
+    # Try to find an isomorphism
+    isoData := RecogniseSnAn(ri, 1 / 10 ^ 6, N);
+    if not IsList(isoData) then
+        return isoData;
+    fi;
+    SetFilterObj(ri, IsLeaf);
+    degree := isoData[4];
+    if isoData[1] = "Sn" then
+        SetSize(ri, Factorial(degree));
+        SetIsRecogInfoForAlmostSimpleGroup(ri, true);
+    else
+        SetSize(ri, Factorial(degree) / 2);
+        SetIsRecogInfoForSimpleGroup(ri, true);
+    fi;
+    Setslptonice(ri, SLPOfElms(isoData[2]));
+    SetNiceGens(ri, StripMemory(isoData[2]));
+    # TODO do we need to StripMemory somewhere here?
+    # TODO better place to save these?
+    ri!.SnAnIsoData := isoData;
+    Setslpforelement(ri, SLPforElementFuncsGeneric.SnAnUnknownDegree);
+    return Success;
+end;
+
+SLPforElementFuncsGeneric.SnAnUnknownDegree := function(ri, g)
+    local isoData, findImage, NaturalSLPFunction, degree, image;
+    isoData := ri!.isoData;
+    if ri!.SnAnIsoData[1] = "Sn" then
+        findImage := FindImageSn;
+        NaturalSLPFunction := RECOG.SLPforSn;
+    else
+        findImage := FindImageAn;
+        NaturalSLPFunction := RECOG.SLPforAn;
+    fi;
+    degree := isoData[4];
+    image := findImage(ri, degree, g, isoData[2][1], isoData[2][2],
+                       isoData[3][1], isoData[3][2]);
+    return NaturalSLPFunction(degree, image);
+end;

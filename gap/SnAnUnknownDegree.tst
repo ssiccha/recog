@@ -193,3 +193,14 @@ gap> img2 := FindImageSn(ri, 11, g2, isoData[2][1], isoData[2][2],
 >                        isoData[3][1], isoData[3][2]);;
 gap> CycleStructurePerm(img2);
 [ 1 ]
+
+# FindHomMethodsGeneric.SnAnUnknownDegree
+gap> sets := Combinations([1 .. 11], 2);;
+gap> S11On2Sets := Action(SymmetricGroup(11), sets, OnSets);;
+gap> ri := EmptyRecognitionInfoRecord(rec(), S11On2Sets, false);;
+gap> FindHomMethodsGeneric.SnAnUnknownDegree(ri);
+true
+gap> Size(ri);
+39916800
+gap> Size(SymmetricGroup(11));
+39916800
