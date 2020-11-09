@@ -1,4 +1,4 @@
-#@local testFunction, degrees
+#@local testFunction, IsBolsteringElement, degrees
 #@local altGroups, symGroups, permMatGroup, altMatGroups, nonAltOrSymGroups
 #@local ri, g, c, r, i, x
 #@local sets, S11On2Sets, res, isoData, gensWithMem, g1, img1, g2, img2
@@ -29,6 +29,45 @@ gap> testFunction := function(G, eps, N)
 >         od;
 >     od;
 > end;;
+
+#
+# x : permutation
+# c : permutation,
+#     should be a 3-cycle
+#
+# Returns true, if x is a bolstering element with respect to the 3-cycle c.
+#
+# Let c = (u, v, w). We call x a bolstering element with respect to c, if
+# x = (v, a_1, ..., a_alpha)(w, b_1, ..., b_beta)(...) or
+# x = (v, a_1, ..., a_alpha, w, b_1, ..., b_beta)(...)
+# with u in fix(x) and alpha, beta >= 2.
+gap> IsBolsteringElement :=
+> function(x, c)
+>     local suppC, dist, i, k, p, pos1;
+>     # suppC = [u, v, w]
+>     suppC := MovedPoints(c);
+>     if Size(suppC) <> 3 then return false; fi;
+>     # dist = [k_u, k_v, k_w],
+>     # where for each p in suppC, k_p is the minimal integer such that p^(x^k) in suppC
+>     dist := [0, 0, 0];
+>     for i in [1..3] do
+>         k := 1;
+>         p := suppC[i]^x;
+>         while not p in suppC do
+>             k := k + 1;
+>             p := p ^ x;
+>         od;
+>         dist[i] := k;
+>     od;
+>     # One point of suppC is fixed by x
+>     pos1 := PositionProperty(dist, k -> k = 1);
+>     if pos1 = fail then return false; fi;
+>     Remove(dist, pos1);
+>     # The other two points of cuppC have distance at least 2
+>     if ForAny(dist, k -> k < 2) then return false; fi;
+>     return true;
+> end;;
+
 gap> degrees := Concatenation(
 >     [10, 12, 20, 21, 30, 35, 40, 42, 50, 51],
 >     Primes{[5 .. 15]}
