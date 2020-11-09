@@ -635,12 +635,16 @@ end);
 
 # TODO: Use FindImageAn or FindImageSn to compute SLPs in nice gens.
 # This function is taken from the function RecogniseSnAn in gap/SnAnBB.gi
+# FIXME: describe return values etc
 BindGlobal("ConstructSnAnIsomorphism",
 function(ri, n, gens)
     local grp, xis, gl, slp, eval, h, b, g;
     grp := GroupWithMemory(Grp(ri));
+    # TODO: strip here?
     xis := ConstructXiAn(n, gens[1], gens[2]);
     for g in GeneratorsOfGroup(grp) do
+        # TODO: can we take g, gens, xis to be without memory? Like this?
+        # gens := StripMemory(gens); xis := StripMemory(xis);
         gl := FindImageAn(ri, n, g, gens[1], gens[2], xis[1], xis[2]);
         if gl = fail then return fail; fi;
         if SignPerm(gl) = -1 then
