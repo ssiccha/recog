@@ -67,7 +67,6 @@ gap> IsBolsteringElement :=
 >     if ForAny(dist, k -> k < 2) then return false; fi;
 >     return true;
 > end;;
-
 gap> degrees := Concatenation(
 >     [10, 12, 20, 21, 30, 35, 40, 42, 50, 51],
 >     Primes{[5 .. 15]}
@@ -219,8 +218,7 @@ gap> BuildCycle(ri, c, x, 10);
 gap> sets := Combinations([1 .. 11], 2);;
 gap> S11On2Sets := Action(SymmetricGroup(11), sets, OnSets);;
 gap> ri := EmptyRecognitionInfoRecord(rec(), S11On2Sets, false);;
-gap> res := RecogniseSnAn(ri, 1/10, 20);;
-gap> isoData := ConstructSnAnIsomorphism(ri, res[3], [res[1], res[2]]);;
+gap> isoData := RecogniseSnAn(ri, 1/10, 20);;
 gap> gensWithMem := GeneratorsWithMemory(GeneratorsOfGroup(S11On2Sets));;
 gap> g1 := gensWithMem[1];;
 gap> img1 := FindImageSn(ri, 11, g1, isoData[2][1], isoData[2][2],
