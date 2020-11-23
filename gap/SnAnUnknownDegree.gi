@@ -637,48 +637,51 @@ end);
 # This function is taken from the function RecogniseSnAn in gap/SnAnBB.gi
 # FIXME: describe return values etc
 BindGlobal("ConstructSnAnIsomorphism",
-function(ri, n, gens)
-    local grp, xis, gl, slp, eval, h, b, g;
+function(ri, n, stdGensAn)
+    local grp, xis, gImage, gensWithoutMemory, bWithoutMemory, hWithoutMemory, slp, eval, h, b, g;
     grp := GroupWithMemory(Grp(ri));
-    # TODO: strip here?
-    xis := ConstructXiAn(n, gens[1], gens[2]);
+    gensWithoutMemory := StripMemory(stdGensAn);
+    xis := ConstructXiAn(n, gensWithoutMemory[1], gensWithoutMemory[2]);
     for g in GeneratorsOfGroup(grp) do
-        # TODO: can we take g, gens, xis to be without memory? Like this?
-        # gens := StripMemory(gens); xis := StripMemory(xis);
-        gl := FindImageAn(ri, n, g, gens[1], gens[2], xis[1], xis[2]);
-        if gl = fail then return fail; fi;
-        if SignPerm(gl) = -1 then
+        gImage := FindImageAn(ri, n, StripMemory(g), gensWithoutMemory[1],
+                          gensWithoutMemory[2], xis[1], xis[2]);
+        if gImage = fail then return fail; fi;
+        if SignPerm(gImage) = -1 then
             # we found an odd permutation,
             # so the group cannot be An
-            slp := RECOG.SLPforAn(n, (1,2) * gl);
-            eval:=ResultOfStraightLineProgram(slp, [gens[2], gens[1]]);
-            h :=  eval * g ^ -1;
+            slp := RECOG.SLPforAn(n, (1,2) * gImage);
+            eval:=ResultOfStraightLineProgram(slp, [stdGensAn[2], stdGensAn[1]]);
+            h := eval * g ^ -1;
             if n mod 2 <> 0 then
-                b := gens[1] * gens[2];
+                b := stdGensAn[1] * stdGensAn[2];
             else
-                b := h * gens[1] * gens[2];
+                b := h * stdGensAn[1] * stdGensAn[2];
             fi;
             if SatisfiesSnPresentation(ri, n, b, h) then
-                xis := ConstructXiSn(n, b, h);
+                bWithoutMemory := StripMemory(b);
+                hWithoutMemory := StripMemory(h);
+                xis := ConstructXiSn(n, bWithoutMemory, hWithoutMemory);
+                # TODO: Move this loop, introduce a new variable foundOddPermutation,
+                # because we already computed this for the previous generators
                 for g in GeneratorsOfGroup(grp) do
-                    gl := FindImageSn(ri, n, g, b, h, xis[1], xis[2]);
-                    if gl = fail then return fail; fi;
-                    slp := RECOG.SLPforSn(n, gl);
+                    gImage := FindImageSn(ri, n, StripMemory(g), bWithoutMemory, hWithoutMemory, xis[1], xis[2]);
+                    if gImage = fail then return fail; fi;
+                    slp := RECOG.SLPforSn(n, gImage);
                     eval := ResultOfStraightLineProgram(slp, [h, b]);
-                    if not isequal(ri)(eval, g) then return fail; fi;
+                    if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
                 od;
                 return ["Sn", [b, h], xis];
             else
                 return fail;
             fi;
         else
-            slp := RECOG.SLPforAn(n, gl);
-            eval:=ResultOfStraightLineProgram(slp, [gens[2], gens[1]]);
-            if not isequal(ri)(eval, g) then return fail; fi;
+            slp := RECOG.SLPforAn(n, gImage);
+            eval:=ResultOfStraightLineProgram(slp, [gensWithoutMemory[2], gensWithoutMemory[1]]);
+            if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
         fi;
     od;
 
-    return ["An", [gens[1], gens[2]], xis];
+    return ["An", [stdGensAn[1], stdGensAn[2]], xis];
 end);
 
 # FIXME: describe function
@@ -743,8 +746,11 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
         SetSize(ri, Factorial(degree) / 2);
         SetIsRecogInfoForSimpleGroup(ri, true);
     fi;
-    Setslptonice(ri, SLPOfElms(isoData[2]));
-    SetNiceGens(ri, StripMemory(isoData[2]));
+    # Note that when putting the generators into the record, we reverse
+    # their order, such that it fits to the SLPforSn/SLPforAn function!
+    Setslptonice(ri, SLPOfElms(Reversed(isoData[2])));
+    isoData[2] := StripMemory(isoData[2]);
+    SetNiceGens(ri, Reversed(isoData[2]));
     # TODO do we need to StripMemory somewhere here?
     # TODO better place to save these?
     ri!.SnAnUnknownDegreeIsoData := isoData;
