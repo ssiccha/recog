@@ -1,3 +1,22 @@
+#############################################################################
+##
+##  This file is part of recog, a package for the GAP computer algebra system
+##  which provides a collection of methods for the constructive recognition
+##  of groups.
+##
+##  This files's authors include Friedrich Rober and Sergio Siccha.
+##
+##  Copyright of recog belongs to its developers whose names are too numerous
+##  to list here. Please refer to the COPYRIGHT file for details.
+##
+##  SPDX-License-Identifier: GPL-3.0-or-later
+##
+##
+##  This file provides code for recognising whether a permutation group
+##  is isomorphic to an alternating or symmetric group. It implements [JLNP13].
+##
+#############################################################################
+#
 # FIXME: Move me into GAP
 # Helper function to compute all primes up to a given integer via a prime sieve
 BindGlobal("AllPrimesUpTo",
