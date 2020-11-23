@@ -755,6 +755,7 @@ function(ri, eps, N)
     return TemporaryFailure;
 end);
 
+# TODO comment
 FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     local G, N, isoData, degree;
     G := Grp(ri);
@@ -798,6 +799,7 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     return Success;
 end;
 
+# The SLP function if G is isomorphic to Sn.
 SLPforElementFuncsGeneric.SnUnknownDegree := function(ri, g)
     local isoData, degree, image;
     isoData := ri!.SnAnUnknownDegreeIsoData;
@@ -807,7 +809,8 @@ SLPforElementFuncsGeneric.SnUnknownDegree := function(ri, g)
     return RECOG.SLPforSn(degree, image);
 end;
 
-SLPforElementFuncsGeneric.SnAnUnknownDegree := function(ri, g)
+# The SLP function if G is isomorphic to An.
+SLPforElementFuncsGeneric.AnUnknownDegree := function(ri, g)
     local isoData, degree, image;
     isoData := ri!.SnAnUnknownDegreeIsoData;
     degree := isoData[4];
