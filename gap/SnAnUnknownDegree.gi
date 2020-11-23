@@ -633,9 +633,17 @@ function(ri, g, c, k, eps, N)
     fi;
 end);
 
-# TODO: Use FindImageAn or FindImageSn to compute SLPs in nice gens.
-# This function is taken from the function RecogniseSnAn in gap/SnAnBB.gi
-# FIXME: describe return values etc
+# This function is an excerpt of the function RecogniseSnAn in gap/SnAnBB.gi
+# ri : recog info record with group G,
+# n : degree
+# stdGensAn : standard generators of An < G
+#
+# Returns either fail or a list [s, stdGens, xis], where:
+# - s is the isomorphism type, that is either the string "Sn" or "An".
+# - stdGens are the standard generators of G. Identical to stdGensAn if G is
+#   isomorphic to An
+# - xis implicitly defines the isomorphism. It is used by FindImageSn and
+#   FindImageAn to compute the isomorphism.
 BindGlobal("ConstructSnAnIsomorphism",
 function(ri, n, stdGensAn)
     local grp, xis, gImage, gensWithoutMemory, bWithoutMemory, hWithoutMemory, slp, eval, h, b, g;
