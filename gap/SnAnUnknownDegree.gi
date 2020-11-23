@@ -721,6 +721,8 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     G := Grp(ri);
     # TODO find value for N and eps
     # Check magma
+    # TODO: Can we assume that recognition of natural Sn and An came first? Can
+    # we explicitly check that by checking ri!.fhmethsel?
     if IsPermGroup(G) then
         N := NrMovedPoints(G);
     else
