@@ -728,6 +728,7 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     fi;
     # Try to find an isomorphism
     isoData := RecogniseSnAn(ri, 1 / 10 ^ 6, N);
+    # NeverApplicable or TemporaryFailure
     if not IsList(isoData) then
         return isoData;
     fi;
@@ -744,23 +745,29 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     SetNiceGens(ri, StripMemory(isoData[2]));
     # TODO do we need to StripMemory somewhere here?
     # TODO better place to save these?
-    ri!.SnAnIsoData := isoData;
-    Setslpforelement(ri, SLPforElementFuncsGeneric.SnAnUnknownDegree);
+    ri!.SnAnUnknownDegreeIsoData := isoData;
+    if isoData[1] = "Sn" then
+        Setslpforelement(ri, SLPforElementFuncsGeneric.SnUnknownDegree);
+    else
+        Setslpforelement(ri, SLPforElementFuncsGeneric.AnUnknownDegree);
+    fi;
     return Success;
 end;
 
-SLPforElementFuncsGeneric.SnAnUnknownDegree := function(ri, g)
-    local isoData, findImage, NaturalSLPFunction, degree, image;
-    isoData := ri!.isoData;
-    if ri!.SnAnIsoData[1] = "Sn" then
-        findImage := FindImageSn;
-        NaturalSLPFunction := RECOG.SLPforSn;
-    else
-        findImage := FindImageAn;
-        NaturalSLPFunction := RECOG.SLPforAn;
-    fi;
+SLPforElementFuncsGeneric.SnUnknownDegree := function(ri, g)
+    local isoData, degree, image;
+    isoData := ri!.SnAnUnknownDegreeIsoData;
     degree := isoData[4];
-    image := findImage(ri, degree, g, isoData[2][1], isoData[2][2],
+    image := FindImageSn(ri, degree, g, isoData[2][1], isoData[2][2],
                        isoData[3][1], isoData[3][2]);
-    return NaturalSLPFunction(degree, image);
+    return RECOG.SLPforSn(degree, image);
+end;
+
+SLPforElementFuncsGeneric.SnAnUnknownDegree := function(ri, g)
+    local isoData, degree, image;
+    isoData := ri!.SnAnUnknownDegreeIsoData;
+    degree := isoData[4];
+    image := FindImageAn(ri, degree, g, isoData[2][1], isoData[2][2],
+                       isoData[3][1], isoData[3][2]);
+    return RECOG.SLPforAn(degree, image);
 end;
