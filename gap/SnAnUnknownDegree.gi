@@ -711,7 +711,16 @@ function(ri, n, stdGensAn)
     return ["An", [stdGensAn[1], stdGensAn[2]], xis];
 end);
 
-# FIXME: describe function
+# TODO: make this an autodoc comment, see "@BeginChunk LargeBasePrimitive".
+# This method is an implementation of <Cite Key="JLNP13"/>.
+#
+# From [JLNP13], Theorem 1.1:
+# RecogniseSnAn is a one-sided Monte-Carlo algorithm with the following
+# properties. It takes as input a black-box group <A>G</A>, a natural number
+# <A>N</A> and a real number <A>eps</A> with 0 < <A>eps</A> < 1. If <A>G</A> is
+# isomorphic to An or Sn for some 9 <= <A>n</A> <= <A>N</A>, it returns with
+# probability at least 1 - <A>eps</A> the degree <A>n</A> and an
+# isomorphism from <A>G</A> to An or Sn.
 BindGlobal("RecogniseSnAn",
 function(ri, eps, N)
     local T, foundPreImagesOfStdGens, iterator, c, tmp, isoData, i;
