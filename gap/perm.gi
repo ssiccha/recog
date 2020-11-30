@@ -442,6 +442,9 @@ AddMethod(FindHomDbPerm, FindHomMethodsPerm.Imprimitive,
 AddMethod(FindHomDbPerm, FindHomMethodsPerm.LargeBasePrimitive,
           60, "LargeBasePrimitive",
           "recognises large-base primitive permutation groups" );
+AddMethod(FindHomDbPerm, FindHomMethodsGeneric.SnAnUnknownDegree,
+          58, "SnAnUnknownDegree",
+          "recognises symmetric and alternating groups with n >= 9" );
 AddMethod(FindHomDbPerm, FindHomMethodsPerm.StabilizerChainPerm,
           55, "StabilizerChainPerm",
           Concatenation(
