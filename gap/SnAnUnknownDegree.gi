@@ -711,10 +711,10 @@ function(ri, n, stdGensAn)
     return ["An", [stdGensAn[1], stdGensAn[2]], xis];
 end);
 
-# TODO: make this an autodoc comment, see "@BeginChunk LargeBasePrimitive".
-# This method is an implementation of <Cite Key="JLNP13"/>.
+# This method is an implementation of <Cite Key="JLNP13"/>. It is the main
+# function of SnAnUnknownDegree.
 #
-# From [JLNP13], Theorem 1.1:
+# From <Cite Key="JLNP13"/>, Theorem 1.1:
 # RecogniseSnAn is a one-sided Monte-Carlo algorithm with the following
 # properties. It takes as input a black-box group <A>G</A>, a natural number
 # <A>N</A> and a real number <A>eps</A> with 0 < <A>eps</A> < 1. If <A>G</A> is
@@ -755,7 +755,12 @@ function(ri, eps, N)
     return TemporaryFailure;
 end);
 
-# TODO comment
+#! @BeginChunk SnAnUnknownDegree
+#! This method tries to determine whether the input group given by <A>ri</A> is
+#! isomorphic to a symmetric group Sn or alternating group An with
+#! 9 <= <A>n</A>.
+#! It is an implementation of <Cite Key="JLNP13"/>.
+#! @EndChunk
 FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     local G, N, isoData, degree;
     G := Grp(ri);
