@@ -775,7 +775,7 @@ end);
 #! It is an implementation of <Cite Key="JLNP13"/>.
 #! @EndChunk
 FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
-    local G, N, isoData, degree;
+    local G, N, isoData, degree, p, d;
     G := Grp(ri);
     # TODO find value for N and eps
     # Check magma
@@ -783,6 +783,18 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     # we explicitly check that by checking ri!.fhmethsel?
     if IsPermGroup(G) then
         N := NrMovedPoints(G);
+    elif IsMatrixGroup(G) then
+        # If n >= 10, then the smallest irreducible A_n-module is the
+        # fully deleted permutation module (Kleidman-Liebeck, Proposition 5.3.5).
+        # It has dimension n-2 if p|n and dimension n-1 otherwise.
+        p := Characteristic(DefaultFieldOfMatrixGroup(G));
+        d := DimensionOfMatrixGroup(G);
+        if (d + 2) mod p = 0 then
+            N := d + 2;
+        else
+            N := d + 1;
+        fi;
+        N := Maximum(9, N);
     else
         N := ErrorNoReturn("TODO");
     fi;
