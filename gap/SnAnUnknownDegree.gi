@@ -773,6 +773,10 @@ end);
 #! isomorphic to a symmetric group Sn or alternating group An with
 #! <M>9 \leq n</M>.
 #! It is an implementation of <Cite Key="JLNP13"/>.
+#!
+#! TODO: document the bound N. Refer to Kleidman Liebeck [KL90].
+#!
+#! TODO: in the matrix case assumes that the group acts irreducibly.
 #! @EndChunk
 FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     local G, N, isoData, degree, p, d;
@@ -784,8 +788,8 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     if IsPermGroup(G) then
         N := NrMovedPoints(G);
     elif IsMatrixGroup(G) then
-        # If n >= 10, then the smallest irreducible A_n-module is the
-        # fully deleted permutation module (Kleidman-Liebeck, Proposition 5.3.5).
+        # If n >= 10, then the smallest irreducible An-module is the
+        # fully deleted permutation module, see [KL90], Proposition 5.3.5.
         # It has dimension n-2 if p|n and dimension n-1 otherwise.
         p := Characteristic(DefaultFieldOfMatrixGroup(G));
         d := DimensionOfMatrixGroup(G);
