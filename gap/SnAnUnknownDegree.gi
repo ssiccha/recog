@@ -779,7 +779,7 @@ end);
 #!
 #! @EndChunk
 FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
-    local G, N, isoData, degree, p, d;
+    local G, eps, N, isoData, degree, p, d;
     G := Grp(ri);
     # TODO find value for eps
     eps := 1 / 10^2;
@@ -791,7 +791,7 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
         # action is on 2-subsets. Thus its degree is at least n * (n-1) / 2.
         # Thus for a given degree k, we have
         # n >= 1/2 + Sqrt(1/4 + 2*k).
-        N := 1/2 + Sqrt(1/4 + 2 * NrMovedPoints(G));
+        N := Int(Ceil(1/2 + Sqrt(Float(1/4 + 2 * NrMovedPoints(G)))));
     elif IsMatrixGroup(G) then
         p := Characteristic(DefaultFieldOfMatrixGroup(G));
         d := DimensionOfMatrixGroup(G);
