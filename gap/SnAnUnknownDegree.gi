@@ -774,6 +774,9 @@ end);
 #! <M>9 \leq n</M>.
 #! It is an implementation of <Cite Key="JLNP13"/>.
 #!
+#! If <A>Grp(ri)</A> is a permutation group, we assume that it is primitive and
+#! not a giant (a giant is Sn or An in natural action).
+#!
 #! @EndChunk
 FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     local G, N, isoData, degree, p, d;
@@ -782,9 +785,13 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
     eps := 1 / 10^2;
     # Check magma
     if IsPermGroup(G) then
-        # TODO: Can we assume that recognition of natural Sn and An came first? Can
-        # we explicitly check that by checking ri!.fhmethsel?
-        N := NrMovedPoints(G);
+        # We assume that G is primitive and not a giant.
+        # The smallest non-natural primitive action of Sn or An induces
+        # a large base group. Thus by [L84] its degree is smallest, when the
+        # action is on 2-subsets. Thus its degree is at least n * (n-1) / 2.
+        # Thus for a given degree k, we have
+        # n >= 1/2 + Sqrt(1/4 + 2*k).
+        N := 1/2 + Sqrt(1/4 + 2 * NrMovedPoints(G));
     elif IsMatrixGroup(G) then
         p := Characteristic(DefaultFieldOfMatrixGroup(G));
         d := DimensionOfMatrixGroup(G);
