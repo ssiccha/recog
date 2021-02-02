@@ -663,16 +663,18 @@ end;
 # n : degree
 # stdGensAnWithMemory : standard generators of An < G
 #
-# Returns either fail or a list [s, stdGens, xis, n], where:
-# - s is the isomorphism type, that is either the string "Sn" or "An".
-# - stdGens are the standard generators of G. Identical to stdGensAnWithMemory
-#   if G is isomorphic to An
-# - xis implicitly defines the isomorphism. It is used by RECOG.FindImageSn and
-#   RECOG.FindImageAn to compute the isomorphism.
-# - n is the degree of the group
+# Returns either fail or a record with components:
+# [s, stdGens, xis, n], where:
+# - type: the isomorphism type, that is either the string "Sn" or "An".
+# - isoData: a list [stdGens, xis, n] where
+#   - stdGens are the standard generators of G. They do not have memory.
+#   - xis implicitly defines the isomorphism. It is used by RECOG.FindImageSn
+#     and RECOG.FindImageAn to compute the isomorphism.
+#   - n is the degree of the group.
+# - slpToStdGens: an SLP to stdGens.
 RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAnWithMemory)
     local grp, stdGensAn, xis, gImage, foundOddPermutation, slp, eval,
-        hWithMemory, bWithMemory, b, h, g;
+        hWithMemory, bWithMemory, stdGensSnWithMemory, b, h, g;
     grp := GroupWithMemory(Grp(ri));
     stdGensAn := StripMemory(stdGensAnWithMemory);
     xis := RECOG.ConstructXiAn(n, stdGensAn[1], stdGensAn[2]);
@@ -693,7 +695,9 @@ RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAnWithMemory)
         if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
     od;
     if not foundOddPermutation then
-        return ["An", [stdGensAnWithMemory[1], stdGensAnWithMemory[2]], xis, n];
+        return rec(type := "An",
+                   isoData := [[stdGensAn[1], stdGensAn[2]], xis, n],
+                   slpToStdGens := SLPOfElms(stdGensAnWithMemory));
     fi;
     # Construct standard generators for Sn: [bWithMemory, hWithMemory].
     slp := RECOG.SLPforAn(n, (1,2) * gImage);
@@ -705,6 +709,7 @@ RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAnWithMemory)
     if n mod 2 = 0 then
         bWithMemory := hWithMemory * bWithMemory;
     fi;
+    stdGensSnWithMemory := [bWithMemory, hWithMemory];
     b := StripMemory(bWithMemory);
     h := StripMemory(hWithMemory);
     if not RECOG.SatisfiesSnPresentation(ri, n, b, h) then
@@ -717,10 +722,12 @@ RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAnWithMemory)
                                     xis[1], xis[2]);
         if gImage = fail then return fail; fi;
         slp := RECOG.SLPforSn(n, gImage);
-        eval := ResultOfStraightLineProgram(slp, [hWithMemory, bWithMemory]);
+        eval := ResultOfStraightLineProgram(slp, [h, b]);
         if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
     od;
-    return ["Sn", [bWithMemory, hWithMemory], xis, n];
+    return rec(type := "Sn",
+               isoData := [[b, h], xis, n],
+               slpToStdGens := SLPOfElms(stdGensSnWithMemory));
 end;
 
 # This method is an implementation of <Cite Key="JLNP13"/>. It is the main
@@ -777,7 +784,7 @@ end;
 #!
 #! @EndChunk
 FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
-    local G, eps, N, isoData, degree, p, d;
+    local G, eps, N, p, d, recogData, isoData, degree, swapSLP;
     G := Grp(ri);
     # TODO find value for eps
     eps := 1 / 10^2;
@@ -823,27 +830,30 @@ FindHomMethodsGeneric.SnAnUnknownDegree := function(ri)
                            " IsMatrixGroup");
     fi;
     # Try to find an isomorphism
-    isoData := RECOG.RecogniseSnAn(ri, eps, N);
+    recogData := RECOG.RecogniseSnAn(ri, eps, N);
     # RECOG.RecogniseSnAn returned NeverApplicable or TemporaryFailure
-    if not IsList(isoData) then
-        return isoData;
+    if not IsRecord(recogData) then
+        return recogData;
     fi;
+    isoData := recogData.isoData;
     ri!.SnAnUnknownDegreeIsoData := isoData;
     SetFilterObj(ri, IsLeaf);
-    degree := isoData[4];
-    if isoData[1] = "Sn" then
+    degree := isoData[3];
+    if recogData.type = "Sn" then
         SetSize(ri, Factorial(degree));
         SetIsRecogInfoForAlmostSimpleGroup(ri, true);
     else
         SetSize(ri, Factorial(degree) / 2);
         SetIsRecogInfoForSimpleGroup(ri, true);
     fi;
-    # Note that when putting the generators into the record, we reverse
-    # their order, such that it fits to the SLPforSn/SLPforAn function!
-    Setslptonice(ri, SLPOfElms(Reversed(isoData[2])));
-    isoData[2] := StripMemory(isoData[2]);
-    SetNiceGens(ri, Reversed(isoData[2]));
-    if isoData[1] = "Sn" then
+    # Note that when setting the nice generators we reverse their order, such
+    # that it fits to the SLPforSn/SLPforAn function!
+    SetNiceGens(ri, Reversed(isoData[1]));
+    swapSLP := StraightLineProgram([[[2, 1], [1, 1]]], 2);
+    Setslptonice(ri,
+                 CompositionOfStraightLinePrograms(recogData.slpToStdGens,
+                                                   swapSLP));
+    if recogData.type = "Sn" then
         Setslpforelement(ri, SLPforElementFuncsGeneric.SnUnknownDegree);
     else
         Setslpforelement(ri, SLPforElementFuncsGeneric.AnUnknownDegree);
@@ -855,9 +865,9 @@ end;
 SLPforElementFuncsGeneric.SnUnknownDegree := function(ri, g)
     local isoData, degree, image;
     isoData := ri!.SnAnUnknownDegreeIsoData;
-    degree := isoData[4];
-    image := RECOG.FindImageSn(ri, degree, g, isoData[2][1], isoData[2][2],
-                       isoData[3][1], isoData[3][2]);
+    degree := isoData[3];
+    image := RECOG.FindImageSn(ri, degree, g, isoData[1][1], isoData[1][2],
+                       isoData[2][1], isoData[2][2]);
     return RECOG.SLPforSn(degree, image);
 end;
 
@@ -865,8 +875,8 @@ end;
 SLPforElementFuncsGeneric.AnUnknownDegree := function(ri, g)
     local isoData, degree, image;
     isoData := ri!.SnAnUnknownDegreeIsoData;
-    degree := isoData[4];
-    image := RECOG.FindImageAn(ri, degree, g, isoData[2][1], isoData[2][2],
-                       isoData[3][1], isoData[3][2]);
+    degree := isoData[3];
+    image := RECOG.FindImageAn(ri, degree, g, isoData[1][1], isoData[1][2],
+                       isoData[2][1], isoData[2][2]);
     return RECOG.SLPforAn(degree, image);
 end;
