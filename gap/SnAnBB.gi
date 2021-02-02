@@ -18,8 +18,7 @@
 ##  The code is based upon the algorithm presented in the paper [BLGN+03].
 ##
 ##
-BindGlobal("SatisfiesSnPresentation",
-function(ri, n, r, s)
+RECOG.SatisfiesSnPresentation := function(ri, n, r, s)
     local j, t;
     if not(isone(ri)((r * s)^(n-1))) then
         return false;
@@ -34,10 +33,9 @@ function(ri, n, r, s)
         j := j + 1;
     od;
     return true;
-end);
+end;
 
-BindGlobal("SatisfiesAnPresentation",
-function(ri, s, t, n)
+RECOG.SatisfiesAnPresentation := function(ri, s, t, n)
     local j, r, ti;
 
     if not(isone(ri)(s^(n-2))) or not(isone(ri)(t^3)) then
@@ -77,10 +75,9 @@ function(ri, s, t, n)
         od;
         return true;
     fi;
-end);
+end;
 
-BindGlobal("Binary",
-function( i, m )
+RECOG.Binary := function( i, m )
     local j, bin, le;
     bin := [];
     for j in [ 1 .. m ] do
@@ -91,10 +88,9 @@ function( i, m )
         bin[j] := 1 - bin[j-m];
     od;
     return bin;
-end);
+end;
 
-BindGlobal("ConstructXiSn",
-function( n, g, h )
+RECOG.ConstructXiSn := function( n, g, h )
     local a, c, xis, xisl, k, m, b, i, j, q, q2, q4, g2, g4, conj, pow;
 
     k := QuoInt( n, 3 );
@@ -134,7 +130,7 @@ function( n, g, h )
                 conj := conj * q4;
                 pow := pow * g4;
             fi;
-            b := Binary(i, m);
+            b := RECOG.Binary(i, m);
             for j in [1 .. m] do
                 if b[j] = 1 then
                     xis[j] := xis[j] * a;
@@ -167,7 +163,7 @@ function( n, g, h )
                 conj := conj * q4;
                 pow := pow * g4;
             fi;
-            b := Binary(i, m);
+            b := RECOG.Binary(i, m);
             for j in [1 .. m] do
                 if b[j] = 1 then
                     xis[j] := xis[j] * a;
@@ -193,11 +189,10 @@ function( n, g, h )
 
     return [xis, xisl];
 
-end);
+end;
 
 ##  Test whether i^z = j
-BindGlobal("IsImagePointSn",
-function(ri, n, z, g,  h, j,  t1z, t2z)
+RECOG.IsImagePointSn := function(ri, n, z, g,  h, j,  t1z, t2z)
     local s, k, cnt, gj;
 
     gj := g^(j-3);
@@ -225,11 +220,10 @@ function(ri, n, z, g,  h, j,  t1z, t2z)
 
     return true;
 
-end);
+end;
 
 ##  Determine the image of z under lambda
-BindGlobal("FindImageSn",
-function(ri, n, z, g, h, xis, xisl)
+RECOG.FindImageSn := function(ri, n, z, g, h, xis, xisl)
     local i, j, l, t, tz, k, sup, m, rest, lp1, mxj, mxjpm, zim, OrderSup;
 
     m := Length(xisl)/2;
@@ -283,7 +277,7 @@ function(ri, n, z, g, h, xis, xisl)
                 if not IsBound(zim[i+l-1]) then
                     if Length(sup[l]) = 1 then
                         zim[i+l-1] := sup[l][1];
-                    elif IsImagePointSn(ri,n,z,g,h,j,t[l]^z,t[lp1 mod 3+1]^z)
+                    elif RECOG.IsImagePointSn(ri,n,z,g,h,j,t[l]^z,t[lp1 mod 3+1]^z)
                         then zim[i+l-1] := j;
                     fi;
                 fi;
@@ -303,7 +297,7 @@ function(ri, n, z, g, h, xis, xisl)
 
     if RemInt(n,3) = 2 then
         sup := Difference([1..n],zim);
-        if IsImagePointSn(ri, n,z,g,h,sup[1],(h^(g^(-1)))^z,
+        if RECOG.IsImagePointSn(ri, n,z,g,h,sup[1],(h^(g^(-1)))^z,
                                                  (h^(g^(-2)))^z ) then
             zim[n] := sup[1];
         else
@@ -315,10 +309,9 @@ function(ri, n, z, g, h, xis, xisl)
     if Length(Set(zim)) <> n then return fail; fi;
 
     return PermList(zim);
-end);
+end;
 
-BindGlobal("ConstructXiAn",
-function( n, g, h )
+RECOG.ConstructXiAn := function( n, g, h )
     local a, c, xis, xisl, k, m, b, i, j, cyc5, cyc, cyc10,
           a1, b1, a2, b2, aux, a3, b3, anew;
 
@@ -396,7 +389,7 @@ function( n, g, h )
                 xis[2*m+6] := xis[2*m+6] * b3;
                 Add(xisl[2*m+6], [5*i-4,5*i-3,5*i,5*i+1,5*i+5] );
               fi;
-              b := Binary(i, m);
+              b := RECOG.Binary(i, m);
               for j in [1 .. m] do
                 if b[j] = 1 then
                     xis[j]  := xis[j] * anew;
@@ -474,7 +467,7 @@ function( n, g, h )
                 xis[2*m+7] := xis[2*m+7] * b3;
                 Add(xisl[2*m+7], [5*i-4,5*i-3,5*i,5*i+1,5*i+5] );
               fi;
-              b := Binary(i, m);
+              b := RECOG.Binary(i, m);
               for j in [1 .. m] do
                 if b[j] = 1 then
                     xis[j]  := xis[j] * anew;
@@ -567,7 +560,7 @@ function( n, g, h )
                 a3 := a3^cyc10;
                 b3 := b3^cyc10;
               fi;
-              b := Binary(i, m);
+              b := RECOG.Binary(i, m);
               for j in [1 .. m] do
                 if b[j] = 1 then
                     xis[j] := xis[j] * anew;
@@ -650,7 +643,7 @@ function( n, g, h )
                 a3 := a3^cyc10;
                 b3 := b3^cyc10;
               fi;
-              b := Binary(i, m);
+              b := RECOG.Binary(i, m);
               for j in [1 .. m] do
                 if b[j] = 1 then
                     xis[j] := xis[j] * anew;
@@ -676,11 +669,10 @@ function( n, g, h )
     xisl := List(xisl, z->Union(z));
 
     return [xis,xisl];
-end);
+end;
 
 # Test whether i^z = j
-BindGlobal("IsImagePointAn",
-function(ri, n, z, g, h, j, s, a, b, t1z, t2z)
+RECOG.IsImagePointAn := function(ri, n, z, g, h, j, s, a, b, t1z, t2z)
     local sc, k, cnt, bj;
 
     sc := ShallowCopy(s);
@@ -711,11 +703,10 @@ function(ri, n, z, g, h, j, s, a, b, t1z, t2z)
     od;
     if cnt < 4 then return false; fi;
     return true;
-end);
+end;
 
 ##  Determine the image of z under lambda
-BindGlobal("FindImageAn",
-function(ri, n, z, g, h, xis, xisl)
+RECOG.FindImageAn := function(ri, n, z, g, h, xis, xisl)
     local i, j, jj, d, dd, t, k, ind, indices, sup, m, rest, lp1,
           findp, mxj, mxjpm, zim, l, inds, a, b, c, tim, tc, tdz, s;
 
@@ -813,7 +804,7 @@ function(ri, n, z, g, h, xis, xisl)
             else
                 for j in [1..Length(sup[l])] do
                     if not IsBound(zim[i+l-1]) then
-                        if IsImagePointAn(ri,n,z,g,h,sup[l][j],s,a,b,
+                        if RECOG.IsImagePointAn(ri,n,z,g,h,sup[l][j],s,a,b,
                               t[findp[l][1]]^z, t[findp[l][2]]^z ) then
                             zim[i+l-1] := sup[l][j];
                         fi;
@@ -839,7 +830,7 @@ function(ri, n, z, g, h, xis, xisl)
             sup := Difference([1..n],zim);
             for j in sup do
                 if not IsBound(zim[n+1-k]) then
-                    if IsImagePointAn(ri,n,z,g,h,j,s,a,b,
+                    if RECOG.IsImagePointAn(ri,n,z,g,h,j,s,a,b,
                           t[findp[6-k][1]]^z, t[findp[6-k][2]]^z ) then
                         zim[n+1-k] := j;
                         sup := Difference(sup,[j]);
@@ -853,7 +844,7 @@ function(ri, n, z, g, h, xis, xisl)
     if Length(Set(zim)) <> n then return fail; fi;
 
     return PermList(zim);
-end);
+end;
 
 
 # ######################################################################
@@ -879,9 +870,9 @@ end);
 #     if gens = fail then return fail; fi;
 #
 #     if gens[3] = "Sn" then
-#         xis := ConstructXiSn( n, gens[1], gens[2] );
+#         xis := RECOG.ConstructXiSn( n, gens[1], gens[2] );
 #         for g in GeneratorsOfGroup(grp) do
-#             gl := FindImageSn( n, g, gens[1], gens[2], xis[1], xis[2] );
+#             gl := RECOG.FindImageSn( n, g, gens[1], gens[2], xis[1], xis[2] );
 #             if gl = fail then return fail; fi;
 #             slp := RECOG.SLPforSn( n, gl );
 #             eval := ResultOfStraightLineProgram(slp, [gens[2],gens[1]]);
@@ -889,9 +880,9 @@ end);
 #         od;
 #         return [ "Sn", [gens[1],gens[2]], xis ];
 #     else
-#         xis := ConstructXiAn( n, gens[1], gens[2] );
+#         xis := RECOG.ConstructXiAn( n, gens[1], gens[2] );
 #         for g in GeneratorsOfGroup(grp) do
-#             gl := FindImageAn( n, g, gens[1], gens[2], xis[1], xis[2] );
+#             gl := RECOG.FindImageAn( n, g, gens[1], gens[2], xis[1], xis[2] );
 #             if gl = fail then return fail; fi;
 #             if SignPerm(gl) = -1 then
 #                 # we found an odd permutation,
@@ -904,10 +895,10 @@ end);
 #                 else
 #                     b := h * gens[1] * gens[2];
 #                 fi;
-#                 if SatisfiesSnPresentation( n, b, h ) then
-#                     xis := ConstructXiSn( n, b, h );
+#                 if RECOG.SatisfiesSnPresentation( n, b, h ) then
+#                     xis := RECOG.ConstructXiSn( n, b, h );
 #                     for g in GeneratorsOfGroup(grp) do
-#                         gl := FindImageSn(n,g,b,h,xis[1],xis[2] );
+#                         gl := RECOG.FindImageSn(n,g,b,h,xis[1],xis[2] );
 #                         if gl = fail then return fail; fi;
 #                         slp := RECOG.SLPforSn(n, gl);
 #                         eval := ResultOfStraightLineProgram(slp,[h,b]);
@@ -1051,7 +1042,7 @@ end);
 #                           if not(isone(ri)(y)) and
 #                              not(isone(ri)(y^2)) and isone(ri)(y^3) then
 #                             Info(InfoRecSnAn,1,"found good transposition");
-#                             if SatisfiesSnPresentation( n, b, h ) then
+#                             if RECOG.SatisfiesSnPresentation( n, b, h ) then
 #                               Info( InfoRecSnAn, 1,
 #                                 "Group satisfies presentation for Sn ",N);
 #                               return [ b, h, "Sn" ];
@@ -1130,7 +1121,7 @@ end);
 #
 #                             g := b * h^2;
 #
-#                             if SatisfiesAnPresentation( n, g, h ) then
+#                             if RECOG.SatisfiesAnPresentation( n, g, h ) then
 #                               Info( InfoRecSnAn, 1,
 #                               "Group satisfies presentation for An ",N);
 #                               return [ g, h, "An" ];
@@ -1171,7 +1162,7 @@ end);
 #                             h := Comm(c^b,c);
 #                             # h = (1,i,i+1)
 #                             g := b * h;
-#                             if SatisfiesAnPresentation( n, g, h ) then
+#                             if RECOG.SatisfiesAnPresentation( n, g, h ) then
 #                               Info( InfoRecSnAn, 1,
 #                               "Group satisfies presentation for An ", N);
 #                               return [ g, h, "An" ];
