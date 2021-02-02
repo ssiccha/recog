@@ -651,7 +651,7 @@ RECOG.StandardGenerators := function(ri, g, c, k, eps, N)
     if RECOG.SatisfiesAnPresentation(ri,
                                      StripMemory(gTilde),
                                      StripMemory(cTilde),
-                                     StripMemory(kTilde)) then
+                                     kTilde) then
         return [gTilde, cTilde, kTilde];
     else
         return fail;
