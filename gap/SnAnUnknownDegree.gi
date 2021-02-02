@@ -668,8 +668,8 @@ end;
 #   RECOG.FindImageAn to compute the isomorphism.
 # - n is the degree of the group
 RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAn)
-    local grp, xis, gImage, gensWithoutMemory, bWithoutMemory, hWithoutMemory,
-        slp, eval, h, b, g;
+    local grp, gensWithoutMemory, xis, gImage, foundOddPermutation, slp, eval,
+        h, b, bWithoutMemory, hWithoutMemory, g;
     grp := GroupWithMemory(Grp(ri));
     gensWithoutMemory := StripMemory(stdGensAn);
     xis := RECOG.ConstructXiAn(n, gensWithoutMemory[1], gensWithoutMemory[2]);
@@ -680,40 +680,42 @@ RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAn)
         if SignPerm(gImage) = -1 then
             # we found an odd permutation,
             # so the group cannot be An
-            slp := RECOG.SLPforAn(n, (1,2) * gImage);
-            eval:=ResultOfStraightLineProgram(slp, [stdGensAn[2], stdGensAn[1]]);
-            h := eval * g ^ -1;
-            if n mod 2 <> 0 then
-                b := stdGensAn[1] * stdGensAn[2];
-            else
-                b := h * stdGensAn[1] * stdGensAn[2];
-            fi;
-            if RECOG.SatisfiesSnPresentation(ri, n, b, h) then
-                bWithoutMemory := StripMemory(b);
-                hWithoutMemory := StripMemory(h);
-                xis := RECOG.ConstructXiSn(n, bWithoutMemory, hWithoutMemory);
-                for g in GeneratorsOfGroup(grp) do
-                    gImage := RECOG.FindImageSn(ri, n, StripMemory(g),
-                                                bWithoutMemory, hWithoutMemory,
-                                                xis[1], xis[2]);
-                    if gImage = fail then return fail; fi;
-                    slp := RECOG.SLPforSn(n, gImage);
-                    eval := ResultOfStraightLineProgram(slp, [h, b]);
-                    if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
-                od;
-                return ["Sn", [b, h], xis, n];
-            else
-                return fail;
-            fi;
-        else
-            slp := RECOG.SLPforAn(n, gImage);
-            eval := ResultOfStraightLineProgram(slp, [gensWithoutMemory[2],
-                                                gensWithoutMemory[1]]);
-            if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
+            foundOddPermutation := true;
+            break;
         fi;
+        slp := RECOG.SLPforAn(n, gImage);
+        eval := ResultOfStraightLineProgram(slp, [gensWithoutMemory[2],
+                                            gensWithoutMemory[1]]);
+        if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
     od;
-
-    return ["An", [stdGensAn[1], stdGensAn[2]], xis, n];
+    if not foundOddPermutation then
+        return ["An", [stdGensAn[1], stdGensAn[2]], xis, n];
+    fi;
+    # Construct standard generators for Sn: [b, h].
+    slp := RECOG.SLPforAn(n, (1,2) * gImage);
+    eval := ResultOfStraightLineProgram(slp, [stdGensAn[2], stdGensAn[1]]);
+    h := eval * g ^ -1;
+    if n mod 2 <> 0 then
+        b := stdGensAn[1] * stdGensAn[2];
+    else
+        b := h * stdGensAn[1] * stdGensAn[2];
+    fi;
+    if not RECOG.SatisfiesSnPresentation(ri, n, b, h) then
+        return fail;
+    fi;
+    bWithoutMemory := StripMemory(b);
+    hWithoutMemory := StripMemory(h);
+    xis := RECOG.ConstructXiSn(n, bWithoutMemory, hWithoutMemory);
+    for g in GeneratorsOfGroup(grp) do
+        gImage := RECOG.FindImageSn(ri, n, StripMemory(g),
+                                    bWithoutMemory, hWithoutMemory,
+                                    xis[1], xis[2]);
+        if gImage = fail then return fail; fi;
+        slp := RECOG.SLPforSn(n, gImage);
+        eval := ResultOfStraightLineProgram(slp, [h, b]);
+        if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
+    od;
+    return ["Sn", [b, h], xis, n];
 end;
 
 # This method is an implementation of <Cite Key="JLNP13"/>. It is the main
