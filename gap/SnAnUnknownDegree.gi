@@ -661,24 +661,25 @@ end;
 # This function is an excerpt of the function RECOG.RecogniseSnAn in gap/SnAnBB.gi
 # ri : recog info record with group G,
 # n : degree
-# stdGensAn : standard generators of An < G
+# stdGensAnWithMemory : standard generators of An < G
 #
 # Returns either fail or a list [s, stdGens, xis, n], where:
 # - s is the isomorphism type, that is either the string "Sn" or "An".
-# - stdGens are the standard generators of G. Identical to stdGensAn if G is
-#   isomorphic to An
+# - stdGens are the standard generators of G. Identical to stdGensAnWithMemory
+#   if G is isomorphic to An
 # - xis implicitly defines the isomorphism. It is used by RECOG.FindImageSn and
 #   RECOG.FindImageAn to compute the isomorphism.
 # - n is the degree of the group
-RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAn)
-    local grp, gensWithoutMemory, xis, gImage, foundOddPermutation, slp, eval,
-        h, b, bWithoutMemory, hWithoutMemory, g;
+RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAnWithMemory)
+    local grp, stdGensAn, xis, gImage, foundOddPermutation, slp, eval,
+        hWithMemory, bWithMemory, b, h, g;
     grp := GroupWithMemory(Grp(ri));
-    gensWithoutMemory := StripMemory(stdGensAn);
-    xis := RECOG.ConstructXiAn(n, gensWithoutMemory[1], gensWithoutMemory[2]);
+    stdGensAn := StripMemory(stdGensAnWithMemory);
+    xis := RECOG.ConstructXiAn(n, stdGensAn[1], stdGensAn[2]);
     for g in GeneratorsOfGroup(grp) do
-        gImage := RECOG.FindImageAn(ri, n, StripMemory(g), gensWithoutMemory[1],
-                          gensWithoutMemory[2], xis[1], xis[2]);
+        gImage := RECOG.FindImageAn(ri, n, StripMemory(g),
+                                    stdGensAn[1], stdGensAn[2],
+                                    xis[1], xis[2]);
         if gImage = fail then return fail; fi;
         if SignPerm(gImage) = -1 then
             # we found an odd permutation,
@@ -687,38 +688,39 @@ RECOG.ConstructSnAnIsomorphism := function(ri, n, stdGensAn)
             break;
         fi;
         slp := RECOG.SLPforAn(n, gImage);
-        eval := ResultOfStraightLineProgram(slp, [gensWithoutMemory[2],
-                                            gensWithoutMemory[1]]);
+        eval := ResultOfStraightLineProgram(slp,
+                                            [stdGensAn[2], stdGensAn[1]]);
         if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
     od;
     if not foundOddPermutation then
-        return ["An", [stdGensAn[1], stdGensAn[2]], xis, n];
+        return ["An", [stdGensAnWithMemory[1], stdGensAnWithMemory[2]], xis, n];
     fi;
-    # Construct standard generators for Sn: [b, h].
+    # Construct standard generators for Sn: [bWithMemory, hWithMemory].
     slp := RECOG.SLPforAn(n, (1,2) * gImage);
-    eval := ResultOfStraightLineProgram(slp, [stdGensAn[2], stdGensAn[1]]);
-    h := eval * g ^ -1;
-    if n mod 2 <> 0 then
-        b := stdGensAn[1] * stdGensAn[2];
-    else
-        b := h * stdGensAn[1] * stdGensAn[2];
+    eval := ResultOfStraightLineProgram(
+        slp, [stdGensAnWithMemory[2], stdGensAnWithMemory[1]]
+    );
+    hWithMemory := eval * g ^ -1;
+    bWithMemory := stdGensAnWithMemory[1] * stdGensAnWithMemory[2];
+    if n mod 2 = 0 then
+        bWithMemory := hWithMemory * bWithMemory;
     fi;
+    b := StripMemory(bWithMemory);
+    h := StripMemory(hWithMemory);
     if not RECOG.SatisfiesSnPresentation(ri, n, b, h) then
         return fail;
     fi;
-    bWithoutMemory := StripMemory(b);
-    hWithoutMemory := StripMemory(h);
-    xis := RECOG.ConstructXiSn(n, bWithoutMemory, hWithoutMemory);
+    xis := RECOG.ConstructXiSn(n, b, h);
     for g in GeneratorsOfGroup(grp) do
         gImage := RECOG.FindImageSn(ri, n, StripMemory(g),
-                                    bWithoutMemory, hWithoutMemory,
+                                    b, h,
                                     xis[1], xis[2]);
         if gImage = fail then return fail; fi;
         slp := RECOG.SLPforSn(n, gImage);
-        eval := ResultOfStraightLineProgram(slp, [h, b]);
+        eval := ResultOfStraightLineProgram(slp, [hWithMemory, bWithMemory]);
         if not isequal(ri)(eval, StripMemory(g)) then return fail; fi;
     od;
-    return ["Sn", [b, h], xis, n];
+    return ["Sn", [bWithMemory, hWithMemory], xis, n];
 end;
 
 # This method is an implementation of <Cite Key="JLNP13"/>. It is the main
