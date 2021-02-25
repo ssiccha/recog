@@ -1,0 +1,16 @@
+name: CI-with-docker
+
+# Trigger the workflow on push or pull request
+on:
+  - push
+  - pull_request
+
+jobs:
+  test:
+    name: Test with docker
+    runs-on: ubuntu-latest
+    container:
+      image: gapsystem/gap-docker-master
+
+    steps:
+      - run: gap
