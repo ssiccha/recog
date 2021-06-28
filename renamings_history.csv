@@ -3,3 +3,7 @@ RecognitionInfoFamily,RecogNodeFamily,Fam
 IsRecognitionInfo,IsRecogNode,Filt
 RIFac,ImageRecogNode,Attr
 RIKer,KernelRecogNode,Attr
+RIParent,ParentRecogNode,Attr
+methodsforfactor,methodsforimage,Attr
+forfactor,InitialDataForImageRecogNode,Attr
+forkernel,InitialDataForKernelRecogNode,Attr
